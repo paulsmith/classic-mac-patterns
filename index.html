@@ -1,0 +1,52 @@
+<!-- ABOUTME: Interactive showcase for original Macintosh System 1.0 desktop patterns -->
+<!-- ABOUTME: Displays pattern grid with virtual Mac Plus screen for previewing tiled patterns -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Macintosh System 1.0 Desktop Patterns</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Macintosh System 1.0 Desktop Patterns</h1>
+            <p>Original 8×8 pixel patterns from the 1984 Macintosh System 1.0 <a href="https://aresluna.org/frame-of-preference/#:~:text=or%20system%20shortcuts.-,1984,-It%E2%80%99s%20rare%20when">Control Panel</a></p>
+        </header>
+        
+        <main class="showcase">
+            <div class="patterns-section">
+                <h2>Pattern Library</h2>
+                <div class="patterns-grid" id="patternsGrid">
+                    <!-- Patterns will be loaded dynamically -->
+                </div>
+                <div class="pattern-info" id="patternInfo">
+                    <div>Click a pattern to preview on the display</div>
+                </div>
+            </div>
+            
+            <div class="display-section">
+                <h2>Display Preview</h2>
+                <div class="mac-plus">
+                    <div class="mac-bezel">
+                        <div class="mac-screen" id="macScreen">
+                            <canvas class="desktop" id="desktop" width="512" height="384">
+                                <!-- Tiled pattern background will appear here -->
+                            </canvas>
+                        </div>
+                        <div class="mac-logo">
+                            <span>Macintosh</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button id="resetButton" class="reset-btn">Reset Display</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
