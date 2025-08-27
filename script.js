@@ -283,7 +283,10 @@ class MacPatternShowcase {
     this.patternInfo.innerHTML = `
             <div><strong>${status}: Pattern ${displayNumber}</strong></div>
             <div class="pattern-preview">
-                <span class="pbm-label" title="NetPBM (Portable Bitmap) format - a plain text image format. P1 = ASCII bitmap, 8 8 = dimensions, followed by 0s and 1s representing white and black pixels.">PBM:</span> 
+                <span class="pbm-label" aria-describedby="pbm-tooltip" tabindex="0">PBM:</span>
+                <div id="pbm-tooltip" role="tooltip" class="tooltip" aria-hidden="true">
+                    NetPBM (Portable Bitmap) format - a plain text image format. P1 = ASCII bitmap, 8 8 = dimensions, followed by 0s and 1s representing white and black pixels.
+                </div> 
                 <button class="copy-btn" data-copy="${pbm.replace(/"/g, "&quot;")}">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -302,6 +305,98 @@ class MacPatternShowcase {
         this.copyToClipboard(text, btn);
       });
     });
+
+    // Setup accessible tooltip for PBM label
+    this.setupTooltip();
+  }
+
+  setupTooltip() {
+    const trigger = this.patternInfo.querySelector('.pbm-label');
+    const tooltip = this.patternInfo.querySelector('#pbm-tooltip');
+    
+    if (!trigger || !tooltip) return;
+
+    let showTimeout;
+    let hideTimeout;
+
+    const showTooltip = () => {
+      clearTimeout(hideTimeout);
+      showTimeout = setTimeout(() => {
+        tooltip.setAttribute('aria-hidden', 'false');
+        tooltip.classList.add('visible');
+        this.positionTooltip(trigger, tooltip);
+      }, 500); // 500ms delay for show
+    };
+
+    const hideTooltip = () => {
+      clearTimeout(showTimeout);
+      hideTimeout = setTimeout(() => {
+        tooltip.setAttribute('aria-hidden', 'true');
+        tooltip.classList.remove('visible');
+      }, 300); // 300ms delay for hide
+    };
+
+    const immediateHide = () => {
+      clearTimeout(showTimeout);
+      clearTimeout(hideTimeout);
+      tooltip.setAttribute('aria-hidden', 'true');
+      tooltip.classList.remove('visible');
+    };
+
+    // Mouse events
+    trigger.addEventListener('mouseenter', showTooltip);
+    trigger.addEventListener('mouseleave', hideTooltip);
+    
+    // Allow hovering over tooltip content
+    tooltip.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
+    tooltip.addEventListener('mouseleave', hideTooltip);
+
+    // Keyboard events
+    trigger.addEventListener('focus', showTooltip);
+    trigger.addEventListener('blur', hideTooltip);
+
+    // Escape key to close
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && tooltip.getAttribute('aria-hidden') === 'false') {
+        immediateHide();
+        trigger.focus();
+      }
+    });
+  }
+
+  positionTooltip(trigger, tooltip) {
+    const triggerRect = trigger.getBoundingClientRect();
+    const tooltipRect = tooltip.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
+    // Reset positioning
+    tooltip.style.left = '';
+    tooltip.style.right = '';
+    tooltip.style.top = '';
+    tooltip.style.bottom = '';
+
+    // Calculate preferred position (above and centered)
+    let left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2);
+    let top = triggerRect.top - tooltipRect.height - 8;
+
+    // Adjust if tooltip goes off screen horizontally
+    if (left < 8) {
+      left = 8;
+    } else if (left + tooltipRect.width > viewportWidth - 8) {
+      left = viewportWidth - tooltipRect.width - 8;
+    }
+
+    // Adjust if tooltip goes off screen vertically (position below instead)
+    if (top < 8) {
+      top = triggerRect.bottom + 8;
+      tooltip.classList.add('below');
+    } else {
+      tooltip.classList.remove('below');
+    }
+
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${top}px`;
   }
 
   copyToClipboard(text, button) {

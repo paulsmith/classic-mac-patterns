@@ -147,6 +147,56 @@ header p {
     cursor: help;
     border-bottom: 1px dotted #666;
     font-weight: bold;
+    border-radius: 2px;
+    transition: background-color 0.2s ease;
+}
+
+.pbm-label:hover,
+.pbm-label:focus {
+    background-color: rgba(0, 122, 255, 0.1);
+    outline: none;
+}
+
+/* Accessible Tooltip Styles */
+.tooltip {
+    position: absolute;
+    z-index: 1000;
+    background-color: #333;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    max-width: 300px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-5px);
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+}
+
+.tooltip.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border: 5px solid transparent;
+    border-top-color: #333;
+}
+
+.tooltip.below::after {
+    top: -10px;
+    border-top-color: transparent;
+    border-bottom-color: #333;
 }
 
 /* Mac Plus Display Styling */
