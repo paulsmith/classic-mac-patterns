@@ -10,17 +10,63 @@ class MacPatternShowcase {
     this.ctx = this.desktop.getContext("2d");
     this.patternInfo = document.getElementById("patternInfo");
     this.resetButton = document.getElementById("resetButton");
+    this.themeToggle = document.getElementById("themeToggle");
 
     this.init();
   }
 
   async init() {
+    this.initTheme();
     await this.loadPatterns();
     this.createPatternGrid();
     this.setupEventListeners();
     this.setupTooltip();
     this.setupCopyButton();
     this.initializeWithRandomPattern();
+  }
+
+  initTheme() {
+    // Get saved theme or default to system preference
+    const savedTheme = localStorage.getItem("color-scheme");
+    const systemPrefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)",
+    ).matches;
+
+    if (savedTheme) {
+      this.setTheme(savedTheme);
+    } else if (systemPrefersDark) {
+      this.setTheme("dark");
+    } else {
+      this.setTheme("light");
+    }
+
+    // Listen for system theme changes
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        if (!localStorage.getItem("color-scheme")) {
+          this.setTheme(e.matches ? "dark" : "light");
+        }
+      });
+  }
+
+  setTheme(theme) {
+    document.body.style.colorScheme = theme;
+    document.body.className = theme === "dark" ? "dark-theme" : "light-theme";
+    localStorage.setItem("color-scheme", theme);
+  }
+
+  toggleTheme() {
+    const currentTheme =
+      localStorage.getItem("color-scheme") ||
+      (window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light");
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+    this.setTheme(newTheme);
+
+    // Update the page background pattern with new theme colors
+    this.updatePageBackgroundForTheme();
   }
 
   async loadPatterns() {
@@ -101,9 +147,15 @@ class MacPatternShowcase {
     canvas.height = canvasSize;
     const ctx = canvas.getContext("2d");
 
-    // Use muted grayscale colors for subtlety
-    const darkColor = "#e8e8e8"; // Light gray instead of black
-    const lightColor = "#f8f8f8"; // Very light gray instead of white
+    // // Force reflow to ensure CSS variables are updated, then get colors
+    // document.body.offsetHeight; // Force reflow
+    const computedStyle = getComputedStyle(document.body);
+    const darkColor = computedStyle
+      .getPropertyValue("--pattern-bg-dark")
+      .trim();
+    const lightColor = computedStyle
+      .getPropertyValue("--pattern-bg-light")
+      .trim();
 
     for (let y = 0; y < 8; y++) {
       for (let x = 0; x < 8; x++) {
@@ -225,6 +277,10 @@ class MacPatternShowcase {
     this.resetButton.addEventListener("click", () => {
       this.resetDisplay();
     });
+
+    this.themeToggle.addEventListener("click", () => {
+      this.toggleTheme();
+    });
   }
 
   setupCopyButton() {
@@ -245,10 +301,18 @@ class MacPatternShowcase {
     document.body.style.backgroundSize = `${size}px ${size}px`;
   }
 
+  updatePageBackgroundForTheme() {
+    // Regenerate the current pattern background with new theme colors
+    if (this.currentPattern) {
+      this.setPageBackground(this.currentPattern);
+    }
+  }
+
   initializeWithRandomPattern() {
     if (this.patterns.length > 0) {
       const randomPattern =
         this.patterns[Math.floor(Math.random() * this.patterns.length)];
+      this.currentPattern = randomPattern;
       this.setPageBackground(randomPattern);
     }
   }
@@ -409,7 +473,7 @@ class MacPatternShowcase {
       .then(() => {
         const originalText = button.innerHTML;
         button.innerHTML = "✓";
-        button.style.color = "green";
+        button.style.color = "#4CAF50";
         setTimeout(() => {
           button.innerHTML = originalText;
           button.style.color = "";
@@ -426,7 +490,7 @@ class MacPatternShowcase {
 
         const originalText = button.innerHTML;
         button.innerHTML = "✓";
-        button.style.color = "green";
+        button.style.color = "#4CAF50";
         setTimeout(() => {
           button.innerHTML = originalText;
           button.style.color = "";
