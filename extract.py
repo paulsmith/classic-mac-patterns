@@ -207,7 +207,7 @@ def main():
         with open(outdir / f"patsharp_{resid}_summary.txt", "w") as f:
             f.write(f"PAT# resource ID: {resid}\n")
             f.write(f"Patterns: {len(patterns)}\n")
-            f.write(f"Files: pattern_000.pbm to pattern_{len(patterns)-1:03d}.pbm\n")
+            f.write(f"Files: pattern_000.pbm to pattern_{len(patterns) - 1:03d}.pbm\n")
 
         print(f"[ok] Exported {len(patterns)} patterns from PAT#({resid}) to {outdir}")
 

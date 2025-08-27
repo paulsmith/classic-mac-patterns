@@ -83,7 +83,7 @@ header p {
     transform: scale(1.1);
 }
 
-.pattern-item img {
+.pattern-item canvas {
     width: 100%;
     height: 100%;
     image-rendering: pixelated;
@@ -100,13 +100,44 @@ header p {
     font-size: 0.9rem;
 }
 
-.pattern-info .hex-data {
+.pattern-info .pattern-preview {
     margin-top: 10px;
     background-color: #f8f8f8;
     padding: 10px;
     border-radius: 4px;
+}
+
+.pattern-info .pattern-preview pre {
     font-family: 'Courier New', monospace;
-    word-break: break-all;
+    font-size: 0.8rem;
+    line-height: 1.0;
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+.copy-btn {
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 4px;
+    margin-left: 8px;
+    cursor: pointer;
+    color: #666;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.copy-btn:hover {
+    border-color: #007AFF;
+    color: #007AFF;
+    background-color: #f8f9fa;
+}
+
+.copy-btn svg {
+    width: 14px;
+    height: 14px;
 }
 
 /* Mac Plus Display Styling */
