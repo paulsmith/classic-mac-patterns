@@ -18,6 +18,8 @@ class MacPatternShowcase {
     await this.loadPatterns();
     this.createPatternGrid();
     this.setupEventListeners();
+    this.setupTooltip();
+    this.setupCopyButton();
     this.initializeWithRandomPattern();
   }
 
@@ -225,6 +227,17 @@ class MacPatternShowcase {
     });
   }
 
+  setupCopyButton() {
+    const copyBtn = document.getElementById("copyPbmBtn");
+    copyBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const text = copyBtn.getAttribute("data-copy");
+      if (text) {
+        this.copyToClipboard(text, copyBtn);
+      }
+    });
+  }
+
   setPageBackground(pattern) {
     const { dataUrl, size } = this.createPageBackgroundPattern(pattern);
     document.body.style.backgroundImage = `url(${dataUrl})`;
@@ -265,55 +278,43 @@ class MacPatternShowcase {
       // Clear canvas with white background
       this.ctx.fillStyle = "#ffffff";
       this.ctx.fillRect(0, 0, this.desktop.width, this.desktop.height);
-      this.patternInfo.innerHTML =
-        "<div>Click a pattern to preview on the Mac Plus display</div>";
+      this.updatePatternInfo(null, false);
     }
   }
 
   updatePatternInfo(pattern, isSelected) {
-    const status = isSelected ? "Selected" : "Previewing";
-    const displayNumber = parseInt(pattern.number, 10).toString();
+    const patternStatus = document.getElementById("patternStatus");
+    const patternPreview = document.getElementById("patternPreview");
+    const pbmContent = document.getElementById("pbmContent");
+    const copyBtn = document.getElementById("copyPbmBtn");
 
-    // Create PBM representation
-    const pbmLines = pattern.binaryPattern
-      .map((row) => row.join(" "))
-      .join("\n");
-    const pbm = "P1\n8 8\n" + pbmLines;
+    if (pattern) {
+      const status = isSelected ? "Selected" : "Previewing";
+      const displayNumber = parseInt(pattern.number, 10).toString();
 
-    this.patternInfo.innerHTML = `
-            <div><strong>${status}: Pattern ${displayNumber}</strong></div>
-            <div class="pattern-preview">
-                <span class="pbm-label" aria-describedby="pbm-tooltip" tabindex="0">PBM:</span>
-                <div id="pbm-tooltip" role="tooltip" class="tooltip" aria-hidden="true">
-                    NetPBM (Portable Bitmap) format - a plain text image format. P1 = ASCII bitmap, 8 8 = dimensions, followed by 0s and 1s representing white and black pixels.
-                </div> 
-                <button class="copy-btn" data-copy="${pbm.replace(/"/g, "&quot;")}">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                    </svg>
-                </button>
-                <pre>${pbm}</pre>
-            </div>
-        `;
+      // Create PBM representation
+      const pbmLines = pattern.binaryPattern
+        .map((row) => row.join(" "))
+        .join("\n");
+      const pbm = "P1\n8 8\n" + pbmLines;
 
-    // Add copy functionality to the buttons
-    this.patternInfo.querySelectorAll(".copy-btn").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        const text = btn.getAttribute("data-copy");
-        this.copyToClipboard(text, btn);
-      });
-    });
-
-    // Setup accessible tooltip for PBM label
-    this.setupTooltip();
+      // Update DOM elements
+      patternStatus.innerHTML = `<strong>${status}: Pattern ${displayNumber}</strong>`;
+      pbmContent.textContent = pbm;
+      copyBtn.setAttribute("data-copy", pbm);
+      patternPreview.style.display = "block";
+    } else {
+      // Clear pattern info
+      patternStatus.textContent =
+        "Click a pattern to preview on the Mac Plus display";
+      patternPreview.style.display = "none";
+    }
   }
 
   setupTooltip() {
-    const trigger = this.patternInfo.querySelector('.pbm-label');
-    const tooltip = this.patternInfo.querySelector('#pbm-tooltip');
-    
+    const trigger = document.querySelector(".pbm-label");
+    const tooltip = document.getElementById("pbm-tooltip");
+
     if (!trigger || !tooltip) return;
 
     let showTimeout;
@@ -322,8 +323,8 @@ class MacPatternShowcase {
     const showTooltip = () => {
       clearTimeout(hideTimeout);
       showTimeout = setTimeout(() => {
-        tooltip.setAttribute('aria-hidden', 'false');
-        tooltip.classList.add('visible');
+        tooltip.setAttribute("aria-hidden", "false");
+        tooltip.classList.add("visible");
         this.positionTooltip(trigger, tooltip);
       }, 500); // 500ms delay for show
     };
@@ -331,33 +332,36 @@ class MacPatternShowcase {
     const hideTooltip = () => {
       clearTimeout(showTimeout);
       hideTimeout = setTimeout(() => {
-        tooltip.setAttribute('aria-hidden', 'true');
-        tooltip.classList.remove('visible');
+        tooltip.setAttribute("aria-hidden", "true");
+        tooltip.classList.remove("visible");
       }, 300); // 300ms delay for hide
     };
 
     const immediateHide = () => {
       clearTimeout(showTimeout);
       clearTimeout(hideTimeout);
-      tooltip.setAttribute('aria-hidden', 'true');
-      tooltip.classList.remove('visible');
+      tooltip.setAttribute("aria-hidden", "true");
+      tooltip.classList.remove("visible");
     };
 
     // Mouse events
-    trigger.addEventListener('mouseenter', showTooltip);
-    trigger.addEventListener('mouseleave', hideTooltip);
-    
+    trigger.addEventListener("mouseenter", showTooltip);
+    trigger.addEventListener("mouseleave", hideTooltip);
+
     // Allow hovering over tooltip content
-    tooltip.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
-    tooltip.addEventListener('mouseleave', hideTooltip);
+    tooltip.addEventListener("mouseenter", () => clearTimeout(hideTimeout));
+    tooltip.addEventListener("mouseleave", hideTooltip);
 
     // Keyboard events
-    trigger.addEventListener('focus', showTooltip);
-    trigger.addEventListener('blur', hideTooltip);
+    trigger.addEventListener("focus", showTooltip);
+    trigger.addEventListener("blur", hideTooltip);
 
     // Escape key to close
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && tooltip.getAttribute('aria-hidden') === 'false') {
+    document.addEventListener("keydown", (e) => {
+      if (
+        e.key === "Escape" &&
+        tooltip.getAttribute("aria-hidden") === "false"
+      ) {
         immediateHide();
         trigger.focus();
       }
@@ -371,13 +375,13 @@ class MacPatternShowcase {
     const viewportHeight = window.innerHeight;
 
     // Reset positioning
-    tooltip.style.left = '';
-    tooltip.style.right = '';
-    tooltip.style.top = '';
-    tooltip.style.bottom = '';
+    tooltip.style.left = "";
+    tooltip.style.right = "";
+    tooltip.style.top = "";
+    tooltip.style.bottom = "";
 
     // Calculate preferred position (above and centered)
-    let left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2);
+    let left = triggerRect.left + triggerRect.width / 2 - tooltipRect.width / 2;
     let top = triggerRect.top - tooltipRect.height - 8;
 
     // Adjust if tooltip goes off screen horizontally
@@ -390,9 +394,9 @@ class MacPatternShowcase {
     // Adjust if tooltip goes off screen vertically (position below instead)
     if (top < 8) {
       top = triggerRect.bottom + 8;
-      tooltip.classList.add('below');
+      tooltip.classList.add("below");
     } else {
-      tooltip.classList.remove('below');
+      tooltip.classList.remove("below");
     }
 
     tooltip.style.left = `${left}px`;
@@ -435,8 +439,7 @@ class MacPatternShowcase {
     // Clear canvas with white background
     this.ctx.fillStyle = "#ffffff";
     this.ctx.fillRect(0, 0, this.desktop.width, this.desktop.height);
-    this.patternInfo.innerHTML =
-      "<div>Click a pattern to preview on the Mac Plus display</div>";
+    this.updatePatternInfo(null, false);
 
     // Clear page background pattern
     document.body.style.backgroundImage = "";

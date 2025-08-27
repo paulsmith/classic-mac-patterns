@@ -28,7 +28,47 @@
             <!-- Patterns will be loaded dynamically -->
           </div>
           <div class="pattern-info" id="patternInfo">
-            <div>Click a pattern to preview on the Mac Plus display</div>
+            <div id="patternStatus">
+              Click a pattern to preview on the Mac Plus display
+            </div>
+            <div
+              class="pattern-preview"
+              id="patternPreview"
+              style="display: none"
+            >
+              <span
+                class="pbm-label"
+                aria-describedby="pbm-tooltip"
+                tabindex="0"
+                >PBM:</span
+              >
+              <div
+                id="pbm-tooltip"
+                role="tooltip"
+                class="tooltip"
+                aria-hidden="true"
+              >
+                NetPBM (Portable Bitmap) format - a plain text image format. P1
+                = ASCII bitmap, 8 8 = dimensions, followed by 0s and 1s
+                representing white and black pixels.
+              </div>
+              <button class="copy-btn" id="copyPbmBtn">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path
+                    d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                  ></path>
+                </svg>
+              </button>
+              <pre id="pbmContent"></pre>
+            </div>
           </div>
         </div>
 
