@@ -89,6 +89,29 @@ class MacPatternShowcase {
     return binaryPattern;
   }
 
+  createPageBackgroundPattern(pattern) {
+    // Create a "fat bits" background pattern - scale 8x8 to 32x32 for chunky pixelation
+    const scale = 4;
+    const canvas = document.createElement("canvas");
+    canvas.width = 8 * scale;
+    canvas.height = 8 * scale;
+    const ctx = canvas.getContext("2d");
+
+    // Use muted grayscale colors for subtlety
+    const darkColor = "#e8e8e8"; // Light gray instead of black
+    const lightColor = "#f8f8f8"; // Very light gray instead of white
+
+    for (let y = 0; y < 8; y++) {
+      for (let x = 0; x < 8; x++) {
+        const bit = pattern.binaryPattern[y][x];
+        ctx.fillStyle = bit ? darkColor : lightColor;
+        ctx.fillRect(x * scale, y * scale, scale, scale);
+      }
+    }
+
+    return canvas.toDataURL();
+  }
+
   renderPatternToCanvas(pattern) {
     // 1. Synchronize canvas resolution with its display size
     // This is the key fix to prevent browser scaling and anti-aliasing.
@@ -217,6 +240,12 @@ class MacPatternShowcase {
     this.currentPattern = pattern;
     this.renderPatternToCanvas(pattern);
     this.updatePatternInfo(pattern, true);
+
+    // Set the pattern as page background
+    const backgroundDataUrl = this.createPageBackgroundPattern(pattern);
+    document.body.style.backgroundImage = `url(${backgroundDataUrl})`;
+    document.body.style.backgroundRepeat = "repeat";
+    document.body.style.backgroundSize = "32px 32px";
   }
 
   clearPreview() {
@@ -232,22 +261,22 @@ class MacPatternShowcase {
   updatePatternInfo(pattern, isSelected) {
     const status = isSelected ? "Selected" : "Previewing";
     const displayNumber = parseInt(pattern.number, 10).toString();
-    
+
     // Convert binary pattern to hex bytes
-    const hexBytes = pattern.binaryPattern.map(row => {
+    const hexBytes = pattern.binaryPattern.map((row) => {
       let byte = 0;
       for (let i = 0; i < 8; i++) {
-        byte |= (row[i] << (7 - i));
+        byte |= row[i] << (7 - i);
       }
-      return byte.toString(16).toUpperCase().padStart(2, '0');
+      return byte.toString(16).toUpperCase().padStart(2, "0");
     });
-    const hexString = hexBytes.join(' ');
+    const hexString = hexBytes.join(" ");
 
     // Create PBM representation
-    const pbmLines = pattern.binaryPattern.map(row => 
-      row.join(' ')
-    ).join('\n');
-    const pbm = 'P1\n8 8\n' + pbmLines;
+    const pbmLines = pattern.binaryPattern
+      .map((row) => row.join(" "))
+      .join("\n");
+    const pbm = "P1\n8 8\n" + pbmLines;
 
     this.patternInfo.innerHTML = `
             <div><strong>${status}: Pattern ${displayNumber}</strong></div>
@@ -261,7 +290,7 @@ class MacPatternShowcase {
                 </button>
             </div>
             <div class="pattern-preview">
-                PBM: <button class="copy-btn" data-copy="${pbm.replace(/"/g, '&quot;')}">
+                PBM: <button class="copy-btn" data-copy="${pbm.replace(/"/g, "&quot;")}">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -270,43 +299,46 @@ class MacPatternShowcase {
                 <pre>${pbm}</pre>
             </div>
         `;
-    
+
     // Add copy functionality to the buttons
-    this.patternInfo.querySelectorAll('.copy-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+    this.patternInfo.querySelectorAll(".copy-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
         e.preventDefault();
-        const text = btn.getAttribute('data-copy');
+        const text = btn.getAttribute("data-copy");
         this.copyToClipboard(text, btn);
       });
     });
   }
 
   copyToClipboard(text, button) {
-    navigator.clipboard.writeText(text).then(() => {
-      const originalText = button.innerHTML;
-      button.innerHTML = '✓';
-      button.style.color = 'green';
-      setTimeout(() => {
-        button.innerHTML = originalText;
-        button.style.color = '';
-      }, 1000);
-    }).catch(() => {
-      // Fallback for older browsers
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      
-      const originalText = button.innerHTML;
-      button.innerHTML = '✓';
-      button.style.color = 'green';
-      setTimeout(() => {
-        button.innerHTML = originalText;
-        button.style.color = '';
-      }, 1000);
-    });
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        const originalText = button.innerHTML;
+        button.innerHTML = "✓";
+        button.style.color = "green";
+        setTimeout(() => {
+          button.innerHTML = originalText;
+          button.style.color = "";
+        }, 1000);
+      })
+      .catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+
+        const originalText = button.innerHTML;
+        button.innerHTML = "✓";
+        button.style.color = "green";
+        setTimeout(() => {
+          button.innerHTML = originalText;
+          button.style.color = "";
+        }, 1000);
+      });
   }
 
   resetDisplay() {
@@ -316,6 +348,11 @@ class MacPatternShowcase {
     this.ctx.fillRect(0, 0, this.desktop.width, this.desktop.height);
     this.patternInfo.innerHTML =
       "<div>Click a pattern to preview on the Mac Plus display</div>";
+
+    // Clear page background pattern
+    document.body.style.backgroundImage = "";
+    document.body.style.backgroundRepeat = "";
+    document.body.style.backgroundSize = "";
 
     // Remove active class from all pattern items
     document.querySelectorAll(".pattern-item").forEach((item) => {
