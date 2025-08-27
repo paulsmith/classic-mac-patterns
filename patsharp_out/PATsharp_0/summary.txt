@@ -1,3 +1,0 @@
-PAT# resource ID: 0
-Patterns: 38
-Scale: 16
