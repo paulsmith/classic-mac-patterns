@@ -14,7 +14,7 @@ help: ## Show this help message
 
 format: ## Format source code
 	uv run ruff format extract.py
-	npx prettier -w index.html script.js
+	npx prettier -w index.html script.js style.css
 
 web: ## Run web server
 	python -m http.server
