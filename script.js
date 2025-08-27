@@ -18,6 +18,7 @@ class MacPatternShowcase {
     await this.loadPatterns();
     this.createPatternGrid();
     this.setupEventListeners();
+    this.setRandomBackground();
   }
 
   async loadPatterns() {
@@ -223,6 +224,16 @@ class MacPatternShowcase {
     });
   }
 
+  setRandomBackground() {
+    if (this.patterns.length > 0) {
+      const randomPattern = this.patterns[Math.floor(Math.random() * this.patterns.length)];
+      const backgroundDataUrl = this.createPageBackgroundPattern(randomPattern);
+      document.body.style.backgroundImage = `url(${backgroundDataUrl})`;
+      document.body.style.backgroundRepeat = 'repeat';
+      document.body.style.backgroundSize = '32px 32px';
+    }
+  }
+
   previewPattern(pattern) {
     this.renderPatternToCanvas(pattern);
     this.updatePatternInfo(pattern, false);
@@ -262,16 +273,6 @@ class MacPatternShowcase {
     const status = isSelected ? "Selected" : "Previewing";
     const displayNumber = parseInt(pattern.number, 10).toString();
 
-    // Convert binary pattern to hex bytes
-    const hexBytes = pattern.binaryPattern.map((row) => {
-      let byte = 0;
-      for (let i = 0; i < 8; i++) {
-        byte |= row[i] << (7 - i);
-      }
-      return byte.toString(16).toUpperCase().padStart(2, "0");
-    });
-    const hexString = hexBytes.join(" ");
-
     // Create PBM representation
     const pbmLines = pattern.binaryPattern
       .map((row) => row.join(" "))
@@ -281,16 +282,8 @@ class MacPatternShowcase {
     this.patternInfo.innerHTML = `
             <div><strong>${status}: Pattern ${displayNumber}</strong></div>
             <div class="pattern-preview">
-                Hex: ${hexString}
-                <button class="copy-btn" data-copy="${hexString}">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                    </svg>
-                </button>
-            </div>
-            <div class="pattern-preview">
-                PBM: <button class="copy-btn" data-copy="${pbm.replace(/"/g, "&quot;")}">
+                <span class="pbm-label" title="NetPBM (Portable Bitmap) format - a plain text image format. P1 = ASCII bitmap, 8 8 = dimensions, followed by 0s and 1s representing white and black pixels.">PBM:</span> 
+                <button class="copy-btn" data-copy="${pbm.replace(/"/g, "&quot;")}">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>

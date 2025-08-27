@@ -143,6 +143,12 @@ header p {
     height: 14px;
 }
 
+.pbm-label {
+    cursor: help;
+    border-bottom: 1px dotted #666;
+    font-weight: bold;
+}
+
 /* Mac Plus Display Styling */
 .mac-plus {
     display: flex;
