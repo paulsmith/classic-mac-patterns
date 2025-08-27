@@ -18,7 +18,7 @@ class MacPatternShowcase {
     await this.loadPatterns();
     this.createPatternGrid();
     this.setupEventListeners();
-    this.setRandomBackground();
+    this.initializeWithRandomPattern();
   }
 
   async loadPatterns() {
@@ -91,11 +91,12 @@ class MacPatternShowcase {
   }
 
   createPageBackgroundPattern(pattern) {
-    // Create a "fat bits" background pattern - scale 8x8 to 32x32 for chunky pixelation
+    // Create a "fat bits" background pattern - scale 8x8 for chunky pixelation
     const scale = 4;
+    const canvasSize = 8 * scale; // 32px
     const canvas = document.createElement("canvas");
-    canvas.width = 8 * scale;
-    canvas.height = 8 * scale;
+    canvas.width = canvasSize;
+    canvas.height = canvasSize;
     const ctx = canvas.getContext("2d");
 
     // Use muted grayscale colors for subtlety
@@ -110,7 +111,7 @@ class MacPatternShowcase {
       }
     }
 
-    return canvas.toDataURL();
+    return { dataUrl: canvas.toDataURL(), size: canvasSize };
   }
 
   renderPatternToCanvas(pattern) {
@@ -224,13 +225,18 @@ class MacPatternShowcase {
     });
   }
 
-  setRandomBackground() {
+  setPageBackground(pattern) {
+    const { dataUrl, size } = this.createPageBackgroundPattern(pattern);
+    document.body.style.backgroundImage = `url(${dataUrl})`;
+    document.body.style.backgroundRepeat = "repeat";
+    document.body.style.backgroundSize = `${size}px ${size}px`;
+  }
+
+  initializeWithRandomPattern() {
     if (this.patterns.length > 0) {
-      const randomPattern = this.patterns[Math.floor(Math.random() * this.patterns.length)];
-      const backgroundDataUrl = this.createPageBackgroundPattern(randomPattern);
-      document.body.style.backgroundImage = `url(${backgroundDataUrl})`;
-      document.body.style.backgroundRepeat = 'repeat';
-      document.body.style.backgroundSize = '32px 32px';
+      const randomPattern =
+        this.patterns[Math.floor(Math.random() * this.patterns.length)];
+      this.setPageBackground(randomPattern);
     }
   }
 
@@ -251,12 +257,7 @@ class MacPatternShowcase {
     this.currentPattern = pattern;
     this.renderPatternToCanvas(pattern);
     this.updatePatternInfo(pattern, true);
-
-    // Set the pattern as page background
-    const backgroundDataUrl = this.createPageBackgroundPattern(pattern);
-    document.body.style.backgroundImage = `url(${backgroundDataUrl})`;
-    document.body.style.backgroundRepeat = "repeat";
-    document.body.style.backgroundSize = "32px 32px";
+    this.setPageBackground(pattern);
   }
 
   clearPreview() {
