@@ -56,7 +56,7 @@ body.light-theme {
 }
 
 body {
-  font-family: Monaco, "Courier New", monospace;
+  font-family: "Berkeley Mono", Monaco, "Courier New", monospace;
   background-color: var(--primary-background);
   color: var(--primary-text);
   line-height: 1.6;
@@ -162,6 +162,12 @@ header p {
   text-align: center;
 }
 
+.display-section {
+  /* Ensure display section can scroll horizontally on small screens */
+  overflow-x: auto;
+  min-width: 0;
+}
+
 .patterns-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
@@ -209,7 +215,6 @@ header p {
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 10px var(--shadow-primary);
-  font-family: Monaco, "Courier New", monospace;
   font-size: 0.9rem;
 }
 
@@ -335,6 +340,7 @@ header p {
 }
 
 .mac-screen {
+  /* Fixed dimensions for pixel-perfect 8x8 pattern rendering */
   width: 512px;
   height: 384px;
   background-color: #000;
@@ -352,16 +358,6 @@ header p {
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
   display: block;
-}
-
-.mac-logo {
-  position: absolute;
-  bottom: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 14px;
-  color: var(--secondary-text);
-  font-weight: bold;
 }
 
 .controls {
@@ -397,10 +393,7 @@ header p {
     padding: 30px 20px 40px 20px;
   }
 
-  .mac-screen {
-    width: 400px;
-    height: 300px;
-  }
+  /* Mac screen remains 512x384 for pixel-perfect rendering */
 }
 
 @media (max-width: 768px) {
@@ -432,10 +425,7 @@ header p {
     height: 40px;
   }
 
-  .mac-screen {
-    width: 320px;
-    height: 240px;
-  }
+  /* Mac screen remains 512x384 for pixel-perfect rendering */
 
   .mac-bezel {
     padding: 20px 15px 30px 15px;

@@ -147,8 +147,6 @@ class MacPatternShowcase {
     canvas.height = canvasSize;
     const ctx = canvas.getContext("2d");
 
-    // // Force reflow to ensure CSS variables are updated, then get colors
-    // document.body.offsetHeight; // Force reflow
     const computedStyle = getComputedStyle(document.body);
     const darkColor = computedStyle
       .getPropertyValue("--pattern-bg-dark")
