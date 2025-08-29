@@ -148,6 +148,17 @@ header p {
   text-align: center;
 }
 
+.loading-indicator {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--secondary-text);
+  font-style: italic;
+  background-color: var(--surface-primary);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
 .display-section {
   /* Ensure display section can scroll horizontally on small screens */
   overflow-x: auto;

@@ -6,6 +6,7 @@ class MacPatternShowcase {
     this.patterns = [];
     this.currentPattern = null;
     this.patternsGrid = document.getElementById("patternsGrid");
+    this.loadingIndicator = document.getElementById("loadingIndicator");
     this.desktop = document.getElementById("desktop");
     this.ctx = this.desktop.getContext("2d");
     this.patternInfo = document.getElementById("patternInfo");
@@ -217,6 +218,10 @@ class MacPatternShowcase {
   }
 
   createPatternGrid() {
+    // Hide loading indicator and show patterns grid
+    this.loadingIndicator.style.display = "none";
+    this.patternsGrid.style.display = "grid";
+    
     this.patterns.forEach((pattern) => {
       const patternElement = document.createElement("div");
       patternElement.className = "pattern-item";
