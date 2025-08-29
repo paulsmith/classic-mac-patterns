@@ -244,7 +244,7 @@ class MacPatternShowcase {
       // Scale up the canvas for better visibility
       canvas.style.width = "100%";
       canvas.style.height = "100%";
-      canvas.style.imageRendering = "pixelated";
+      canvas.classList.add("pixelated");
 
       patternElement.appendChild(canvas);
 

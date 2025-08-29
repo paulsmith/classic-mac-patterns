@@ -26,11 +26,9 @@
   --bezel-border-dark: light-dark(#ddd, #444);
   --screen-border: light-dark(#333, #666);
   --canvas-white: white; /* Keep patterns black and white for authenticity */
-  --canvas-black: black;
-  --shadow-primary: rgba(0, 0, 0, 0.1);
-  --shadow-strong: rgba(0, 0, 0, 0.3);
+  /* Shadow values inlined where used */
 
-  /* Resolved colors for JavaScript consumption */
+  /* Pattern background colors for JavaScript consumption */
   --pattern-bg-dark: #e8e8e8;
   --pattern-bg-light: #f8f8f8;
 }
@@ -53,6 +51,12 @@ body.light-theme {
   box-sizing: border-box;
 }
 
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
 body {
   font-family: "Berkeley Mono", Monaco, "Courier New", monospace;
   background-color: var(--primary-background);
@@ -68,8 +72,6 @@ body {
   max-width: 1400px;
   margin: 0 auto;
   padding: 20px;
-  background-color: transparent;
-  border-radius: 8px;
 }
 
 header {
@@ -112,32 +114,19 @@ header h1 {
   background-color: var(--button-secondary);
 }
 
-.theme-toggle .sun-icon,
-.theme-toggle .moon-icon {
+.sun-icon,
+.moon-icon {
   transition: opacity 0.2s ease;
 }
 
-/* Show appropriate icon based on theme */
-@media (prefers-color-scheme: light) {
-  .theme-toggle .sun-icon {
-    display: none;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .theme-toggle .moon-icon {
-    display: none;
-  }
-}
-
-/* Override with explicit theme classes */
-body.light-theme .theme-toggle .sun-icon,
-body.dark-theme .theme-toggle .moon-icon {
+/* Theme icon visibility controlled by JavaScript classes */
+body.light-theme .sun-icon,
+body.dark-theme .moon-icon {
   display: none;
 }
 
-body.light-theme .theme-toggle .moon-icon,
-body.dark-theme .theme-toggle .sun-icon {
+body.light-theme .moon-icon,
+body.dark-theme .sun-icon {
   display: block;
 }
 
@@ -174,7 +163,7 @@ header p {
   padding: 20px;
   background-color: var(--surface-primary);
   border-radius: 8px;
-  box-shadow: 0 2px 10px var(--shadow-primary);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .pattern-item {
@@ -183,9 +172,6 @@ header p {
   border: 2px solid var(--border-primary);
   cursor: pointer;
   transition: all 0.2s ease;
-  image-rendering: pixelated;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: crisp-edges;
   background-color: var(--canvas-white);
 }
 
@@ -203,16 +189,13 @@ header p {
 .pattern-item canvas {
   width: 100%;
   height: 100%;
-  image-rendering: pixelated;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: crisp-edges;
 }
 
 .pattern-info {
   background-color: var(--surface-primary);
   padding: 15px;
   border-radius: 8px;
-  box-shadow: 0 2px 10px var(--shadow-primary);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   font-size: 0.9rem;
 }
 
@@ -264,10 +247,8 @@ header p {
   transition: background-color 0.2s ease;
 }
 
-.pbm-label:hover,
-.pbm-label:focus {
+.pbm-label:hover {
   background-color: color-mix(in srgb, var(--border-active) 10%, transparent);
-  outline: none;
 }
 
 /* Accessible Tooltip Styles */
@@ -309,11 +290,6 @@ header p {
   border-top-color: var(--tooltip-background);
 }
 
-.tooltip.below::after {
-  top: -10px;
-  border-top-color: transparent;
-  border-bottom-color: var(--tooltip-background);
-}
 
 .virtual-display {
   display: flex;
@@ -332,7 +308,7 @@ header p {
   box-shadow:
     inset 0 0 0 4px var(--bezel-border-light),
     inset 0 0 0 8px var(--bezel-border-dark),
-    0 10px 30px var(--shadow-strong);
+    0 10px 30px rgba(0, 0, 0, 0.3);
   position: relative;
 }
 
@@ -351,10 +327,6 @@ header p {
   width: 100%;
   height: 100%;
   background-color: var(--canvas-white);
-  image-rendering: pixelated;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: crisp-edges;
-  display: block;
 }
 
 .controls {
