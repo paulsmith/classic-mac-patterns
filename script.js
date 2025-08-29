@@ -368,14 +368,14 @@ class MacPatternShowcase {
     } else {
       // Clear pattern info
       patternStatus.textContent =
-        "Click a pattern to preview on the Mac Plus display";
+        "Click a pattern to preview on the 512×384 display";
       patternPreview.style.display = "none";
     }
   }
 
   setupTooltip() {
     const trigger = document.querySelector(".pbm-label");
-    const tooltip = document.getElementById("pbm-tooltip");
+    const tooltip = document.getElementById("pbmTooltip");
 
     if (!trigger || !tooltip) return;
 

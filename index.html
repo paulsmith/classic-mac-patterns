@@ -46,11 +46,12 @@
           </button>
         </div>
         <p>
-          8×8 patterns from the 1984 Macintosh System 1.0
+          8×8-pixel B&amp;W patterns from Macintosh System 1
           <a
             href="https://aresluna.org/frame-of-preference/#:~:text=or%20system%20shortcuts.-,1984,-It%E2%80%99s%20rare%20when"
             >Control Panel</a
           >
+          and MacPaint
         </p>
       </header>
 
@@ -62,7 +63,7 @@
           </div>
           <div class="pattern-info" id="patternInfo">
             <div id="patternStatus">
-              Click a pattern to preview on the Mac Plus display
+              Click a pattern to preview on the 512×384 display
             </div>
             <div
               class="pattern-preview"
@@ -71,12 +72,12 @@
             >
               <span
                 class="pbm-label"
-                aria-describedby="pbm-tooltip"
+                aria-describedby="pbmTooltip"
                 tabindex="0"
                 >PBM:</span
               >
               <div
-                id="pbm-tooltip"
+                id="pbmTooltip"
                 role="tooltip"
                 class="tooltip"
                 aria-hidden="true"
@@ -107,9 +108,9 @@
 
         <div class="display-section">
           <h2>Display Preview</h2>
-          <div class="mac-plus">
-            <div class="mac-bezel">
-              <div class="mac-screen" id="macScreen">
+          <div class="virtual-display">
+            <div class="bezel">
+              <div class="screen" id="screen">
                 <canvas class="desktop" id="desktop" width="512" height="384">
                   <!-- Tiled pattern background will appear here -->
                 </canvas>
