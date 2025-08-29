@@ -290,7 +290,6 @@ header p {
   border-top-color: var(--tooltip-background);
 }
 
-
 .virtual-display {
   display: flex;
   flex-direction: column;
@@ -298,11 +297,7 @@ header p {
 }
 
 .bezel {
-  background: linear-gradient(
-    145deg,
-    var(--bezel-light),
-    var(--bezel-dark)
-  );
+  background: linear-gradient(145deg, var(--bezel-light), var(--bezel-dark));
   padding: 40px 30px 60px 30px;
   border-radius: 20px;
   box-shadow:
