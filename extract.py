@@ -99,7 +99,6 @@ def write_pbm(rows: bytes, out_path: Path):
     """Write pattern as NetPBM (PBM) format for archival."""
     with open(out_path, "w") as f:
         f.write("P1\n")
-        f.write("# QuickDraw 8x8 pattern\n")
         f.write("8 8\n")
 
         for byte in rows:
