@@ -26,7 +26,6 @@
   --bezel-border-dark: light-dark(#ddd, #444);
   --screen-border: light-dark(#333, #666);
   --canvas-white: white; /* Keep patterns black and white for authenticity */
-  /* Shadow values inlined where used */
 
   /* Pattern background colors for JavaScript consumption */
   --pattern-bg-dark: #e8e8e8;
