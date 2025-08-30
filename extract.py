@@ -193,7 +193,7 @@ def main():
             imgs.append(pattern_to_image(rows))
 
             # Write archival PBM file
-            pbm_path = outdir / f"pattern_{i:03d}.pbm"
+            pbm_path = outdir / f"pattern_{i:02d}.pbm"
             write_pbm(rows, pbm_path)
 
         # Generate sprite sheets (8 columns)
