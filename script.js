@@ -1,6 +1,10 @@
 // ABOUTME: JavaScript for interactive Macintosh desktop pattern showcase
 // ABOUTME: Handles pattern loading, tiling display, and user interactions with Mac Plus virtual screen
 
+function assert(condition, message) {
+  if (!condition) throw message || "Assertion failed";
+}
+
 class MacPatternShowcase {
   constructor() {
     this.patterns = [];
@@ -71,72 +75,59 @@ class MacPatternShowcase {
   }
 
   async loadPatterns() {
-    // Load all 38 patterns (000-037)
-    for (let i = 0; i < 38; i++) {
-      const patternNum = i.toString().padStart(3, "0");
-      try {
-        const pbmData = await this.fetchPbmData(patternNum);
-        const binaryPattern = this.parsePbmToBinary(pbmData);
-        this.patterns.push({
-          id: i,
-          number: patternNum,
-          pbmData: pbmData,
-          binaryPattern: binaryPattern,
-        });
-      } catch (error) {
-        console.warn(`Failed to load pattern ${patternNum}:`, error);
-      }
+    // Load sprite sheet .pbm with all 38 patterns in a single column
+    try {
+      const pbmData = await this.fetchPbmData();
+      this.patterns = this.parsePbmToBinary(pbmData);
+    } catch (error) {
+      console.error(`Loading pattern sprite sheet:`, error);
+      throw error;
     }
   }
 
-  async fetchPbmData(patternNum) {
-    try {
-      const response = await fetch(`patterns/pattern_${patternNum}.pbm`);
-      return await response.text();
-    } catch (error) {
-      console.warn(`Could not load PBM data for pattern ${patternNum}`);
-      return "PBM data unavailable";
-    }
+  async fetchPbmData() {
+    const response = await fetch(`patterns/patterns.pbm`);
+    return await response.text();
   }
 
   parsePbmToBinary(pbmData) {
+    const patterns = [];
+
     // Parse NetPBM P1 format (plain ASCII bitmap)
-    const lines = pbmData.trim().split("\n");
-    const binaryPattern = [];
-
-    // Skip header lines (P1, comments starting with #, dimensions)
-    let dataStartIndex = 0;
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
-      if (line === "P1" || line.startsWith("#")) {
-        continue;
-      }
-      if (line.match(/^\d+\s+\d+$/)) {
-        // Found dimensions line, data starts next
-        dataStartIndex = i + 1;
-        break;
-      }
+    let lines = pbmData.trim().split("\n");
+    if (lines[0] !== "P1" || !lines[1].match(/^\d+\s+\d+$/)) {
+      throw new Error("Invalid NetPBM P1 format");
     }
+    const [cols, rows] = [...lines[1].matchAll(/(\d+)/g)].map((n) =>
+      parseInt(n),
+    );
+    assert(cols === 8, "expected 8 columns");
+    assert(rows % 8 === 0, "expected a whole number of 8-row patterns");
+    lines = lines.slice(2);
+    const patternCount = rows / 8;
 
-    // Parse 8 rows of pattern data
-    for (let row = 0; row < 8; row++) {
-      const rowData = [];
-      if (dataStartIndex + row < lines.length) {
-        const bits = lines[dataStartIndex + row].trim().split(/\s+/);
+    for (let pattern = 0; pattern < patternCount; pattern++) {
+      const binaryPattern = [];
+
+      // Parse 8 rows of pattern data
+      for (let row = 0; row < 8; row++) {
+        const rowData = [];
+        const bits = lines[pattern * 8 + row].trim().split(/\s+/);
         for (let col = 0; col < 8; col++) {
           // In PBM: 0=white, 1=black (same as our binary representation)
           rowData.push(parseInt(bits[col] || "0", 10));
         }
-      } else {
-        // Fallback for missing data
-        for (let col = 0; col < 8; col++) {
-          rowData.push(0);
-        }
+        binaryPattern.push(rowData);
       }
-      binaryPattern.push(rowData);
+
+      patterns.push({
+        id: pattern,
+        number: (pattern + 1).toString(),
+        binaryPattern: binaryPattern,
+      });
     }
 
-    return binaryPattern;
+    return patterns;
   }
 
   createPageBackgroundPattern(pattern) {
@@ -168,30 +159,7 @@ class MacPatternShowcase {
   }
 
   renderPatternToCanvas(pattern) {
-    // 1. Synchronize canvas resolution with its display size
-    // This is the key fix to prevent browser scaling and anti-aliasing.
-    if (
-      this.desktop.width !== this.desktop.clientWidth ||
-      this.desktop.height !== this.desktop.clientHeight
-    ) {
-      this.desktop.width = this.desktop.clientWidth;
-      this.desktop.height = this.desktop.clientHeight;
-    }
-
-    // 2. Disable canvas smoothing for pixel-perfect rendering
-    // This must be done *after* any potential resize, as resizing resets the context.
-    this.ctx.imageSmoothingEnabled = false;
-    this.ctx.webkitImageSmoothingEnabled = false;
-    this.ctx.mozImageSmoothingEnabled = false;
-    this.ctx.msImageSmoothingEnabled = false;
-
-    // Clear canvas with white background
-    this.ctx.fillStyle = "#ffffff";
-    this.ctx.fillRect(0, 0, this.desktop.width, this.desktop.height);
-
-    if (!pattern || !pattern.binaryPattern) return;
-
-    // 3. Create the pattern on an 8x8 off-screen canvas
+    // Create the pattern on an 8x8 off-screen canvas
     const patternCanvas = document.createElement("canvas");
     patternCanvas.width = 8;
     patternCanvas.height = 8;
@@ -211,7 +179,7 @@ class MacPatternShowcase {
     }
     patternCtx.putImageData(imageData, 0, 0);
 
-    // 4. Use the canvas pattern to fill the main display
+    // Use the canvas pattern to fill the main display
     const canvasPattern = this.ctx.createPattern(patternCanvas, "repeat");
     this.ctx.fillStyle = canvasPattern;
     this.ctx.fillRect(0, 0, this.desktop.width, this.desktop.height);
@@ -221,7 +189,7 @@ class MacPatternShowcase {
     // Hide loading indicator and show patterns grid
     this.loadingIndicator.style.display = "none";
     this.patternsGrid.style.display = "grid";
-    
+
     this.patterns.forEach((pattern) => {
       const patternElement = document.createElement("div");
       patternElement.className = "pattern-item";

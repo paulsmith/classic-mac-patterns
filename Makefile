@@ -18,3 +18,6 @@ format: ## Format source code
 
 web: ## Run web server
 	python -m http.server
+
+patterns/patterns.pbm:
+	magick montage -tile 1x38 -geometry 8x8+0+0 -compress none patterns/pattern_0*.pbm $@

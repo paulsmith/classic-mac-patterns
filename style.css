@@ -318,9 +318,8 @@ header p {
 }
 
 .screen {
-  /* Fixed dimensions for pixel-perfect 8x8 pattern rendering */
-  width: 512px;
-  height: 384px;
+  width: 518px;
+  height: 390px;
   background-color: #000;
   border: 3px solid var(--screen-border);
   border-radius: 8px;
@@ -329,8 +328,8 @@ header p {
 }
 
 .desktop {
-  width: 100%;
-  height: 100%;
+  width: 512px;
+  height: 384px;
   background-color: var(--canvas-white);
 }
 
