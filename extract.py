@@ -12,6 +12,7 @@ Usage:
 import argparse
 import re
 from pathlib import Path
+from typing import Pattern
 
 try:
     from PIL import Image
@@ -21,12 +22,12 @@ except ImportError as e:
     ) from e
 
 
-PATBLOCK_RE = re.compile(
+PATBLOCK_RE: Pattern[str] = re.compile(
     r"data\s+'PAT#'\s*\(\s*(\d+)\s*[^)]*\)\s*\{\s*(.*?)\s*\};",
     re.DOTALL | re.IGNORECASE,
 )
 
-HEXSTR_RE = re.compile(r'\$\s*"(.*?)"', re.DOTALL)
+HEXSTR_RE: Pattern[str] = re.compile(r'\$\s*"(.*?)"', re.DOTALL)
 
 
 def parse_derez_patsharp_bytes(block_text: str) -> bytes:
@@ -39,7 +40,7 @@ def parse_derez_patsharp_bytes(block_text: str) -> bytes:
         return b""
 
     # Concatenate all $"..." contents, strip spaces/newlines, keep only hex digits
-    hex_only = []
+    hex_only: list[str] = []
     for chunk in hex_chunks:
         # Remove whitespace and non-hex separators
         cleaned = re.sub(r"[^0-9A-Fa-f]", "", chunk)
@@ -52,7 +53,7 @@ def parse_derez_patsharp_bytes(block_text: str) -> bytes:
     return bytes(int(hex_str[i : i + 2], 16) for i in range(0, len(hex_str), 2))
 
 
-def decode_patsharp(raw: bytes):
+def decode_patsharp(raw: bytes) -> list[bytes]:
     """
     Decode PAT# bytes: [u16_be count] + count * 8 bytes (each pattern is 8 rows).
     Returns list of 8-byte patterns (each entry is 'bytes' of length 8).
@@ -72,7 +73,7 @@ def decode_patsharp(raw: bytes):
             f"[warn] PAT# has {extra} trailing byte(s) beyond the declared count; ignoring."
         )
 
-    patterns = []
+    patterns: list[bytes] = []
     off = 2
     for _ in range(count):
         patterns.append(raw[off : off + 8])
@@ -87,6 +88,8 @@ def pattern_to_image(rows: bytes) -> Image.Image:
     """
     img = Image.new("1", (8, 8), 1)  # 1 = white
     px = img.load()
+    if px is None:
+        raise RuntimeError("Failed to load image pixels")
     for y, byte in enumerate(rows):
         for x in range(8):
             bit = (byte >> (7 - x)) & 1  # MSB first
@@ -95,7 +98,7 @@ def pattern_to_image(rows: bytes) -> Image.Image:
     return img
 
 
-def write_pbm(rows: bytes, out_path: Path):
+def write_pbm(rows: bytes, out_path: Path) -> None:
     """Write pattern as NetPBM (PBM) format for archival."""
     with open(out_path, "w") as f:
         f.write("P1\n")
@@ -110,7 +113,7 @@ def write_pbm(rows: bytes, out_path: Path):
             f.write(" ".join(bits) + "\n")
 
 
-def save_sprite_sheet(images, cols: int, out_path: Path):
+def save_sprite_sheet(images: list[Image.Image], cols: int, out_path: Path) -> None:
     """Save a clean sprite sheet of patterns."""
     if not images:
         return
@@ -122,7 +125,9 @@ def save_sprite_sheet(images, cols: int, out_path: Path):
     sheet.save(out_path)
 
 
-def save_labeled_sprite_sheet(images, cols: int, out_path: Path, scale: int = 4):
+def save_labeled_sprite_sheet(
+    images: list[Image.Image], cols: int, out_path: Path, scale: int = 4
+) -> None:
     """Save a labeled sprite sheet with borders and pattern indices."""
     if not images:
         return
@@ -148,7 +153,9 @@ def save_labeled_sprite_sheet(images, cols: int, out_path: Path, scale: int = 4)
         x, y = c * cell_w + 1, r * cell_h + 1
 
         # Scale and paste the pattern
-        scaled_pattern = im.resize((pattern_size, pattern_size), Image.NEAREST)
+        scaled_pattern = im.resize(
+            (pattern_size, pattern_size), Image.Resampling.NEAREST
+        )
         sheet.paste(scaled_pattern, (x, y))
 
         # Add index label below pattern
@@ -160,7 +167,7 @@ def save_labeled_sprite_sheet(images, cols: int, out_path: Path, scale: int = 4)
     sheet.save(out_path)
 
 
-def main():
+def main() -> None:
     ap = argparse.ArgumentParser(
         description="Extract QuickDraw PAT# patterns from DeRez output."
     )
@@ -187,7 +194,7 @@ def main():
         patterns = decode_patsharp(raw)
 
         # Generate images and write PBM files in single loop
-        imgs = []
+        imgs: list[Image.Image] = []
         for i, rows in enumerate(patterns):
             # Create image for sprite sheet
             imgs.append(pattern_to_image(rows))

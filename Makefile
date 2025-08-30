@@ -16,6 +16,11 @@ format: ## Format source code
 	uv run ruff format extract.py
 	npx prettier -w index.html script.js style.css
 
+typecheck: ## Run type checking with mypy
+	uv run mypy extract.py
+
+check: format typecheck ## Run all checks (format and typecheck)
+
 web: ## Run web server
 	python -m http.server
 
