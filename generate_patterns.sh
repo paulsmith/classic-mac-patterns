@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/etc/profiles/per-user/paul/bin/bash
 # ABOUTME: Professional Mac desktop pattern generator with robust error handling and parallel processing
 # ABOUTME: Generates patterns in multiple formats, resolutions, and layouts using modern software engineering practices
 
@@ -27,7 +27,7 @@ declare -A CONFIG=(
 )
 
 # Directory configuration
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 readonly SCRIPT_DIR
 readonly PATTERNS_DIR="${SCRIPT_DIR}/patterns"
 readonly DEFAULT_OUTPUT_DIR="${SCRIPT_DIR}/assets"
@@ -530,7 +530,7 @@ create_sprite_sheet() {
     log_trace "Creating sprite sheet: $format @ ${scale}x ($layout)"
 
     local size=$((CONFIG[BASE_SIZE] * scale))
-    local sprite_file="${output_dir}/sprites_${layout}.${format}"
+    local sprite_file="${output_dir}/sprites_${scale}x${scale}_${layout}.${format}"
 
     # Skip if incremental mode and file exists
     if [[ "${CONFIG[INCREMENTAL]}" -eq 1 && -f "$sprite_file" ]]; then
@@ -584,13 +584,13 @@ create_sprite_sheet() {
     fi
 }
 
-# Process all patterns for a given format
-process_format() {
+# Process all patterns for a given format - individual files only
+process_format_individual() {
     local format="$1"
     local -n pattern_files_ref=$2
     local output_base_dir="$3"
 
-    log_debug "Processing format: $format"
+    log_debug "Processing individual files for format: $format"
 
     local format_dir="${output_base_dir}/${format}"
 
@@ -605,8 +605,23 @@ process_format() {
             local job_cmd="convert_pattern '$pattern_file' '$format' '$scale' '$scale_dir'"
             enqueue_job "$job_id" "$job_cmd" "convert"
         done
+    done
+}
 
-        # Enqueue sprite sheet creation jobs (after individual files)
+# Process sprite sheets for a given format - after individual files complete
+process_format_sprites() {
+    local format="$1"
+    local output_base_dir="$2"
+
+    log_debug "Processing sprite sheets for format: $format"
+
+    local format_dir="${output_base_dir}/${format}"
+
+    # Generate sprite sheets for each scale
+    for scale in "${SCALES[@]}"; do
+        local scale_dir="${format_dir}/${scale}x"
+
+        # Enqueue sprite sheet creation jobs
         for layout in "${SPRITE_LAYOUTS[@]}"; do
             local job_id="sprite_${format}_${scale}_${layout}"
             local job_cmd="create_sprite_sheet '$format' '$scale' '$layout' '$scale_dir' '$scale_dir'"
@@ -965,26 +980,46 @@ main_processing() {
     calculate_total_jobs
     log_info "Total jobs to process: ${RUNTIME_STATE[TOTAL_JOBS]}"
 
-    # Phase 1: Generate individual files and sprite sheets
-    RUNTIME_STATE[PHASE]="processing"
-    log_info "Phase 1: Processing formats..."
+    # Phase 1a: Generate individual files
+    RUNTIME_STATE[PHASE]="converting"
+    log_info "Phase 1a: Processing individual files..."
 
     for format in "${FORMATS[@]}"; do
-        process_format "$format" pattern_files "$output_dir"
+        process_format_individual "$format" pattern_files "$output_dir"
     done
+
+    # Execute individual file conversion jobs
+    log_info "Executing ${#JOB_QUEUE[@]} individual file conversion jobs..."
+    execute_job_queue "$MAX_JOBS"
+
+    # Phase 1b: Generate sprite sheets (after individual files complete)
+    RUNTIME_STATE[PHASE]="sprites"
+    log_info "Phase 1b: Processing sprite sheets..."
+
+    for format in "${FORMATS[@]}"; do
+        process_format_sprites "$format" "$output_dir"
+    done
+
+    # Execute sprite sheet creation jobs
+    log_info "Executing ${#JOB_QUEUE[@]} sprite sheet creation jobs..."
+    execute_job_queue "$MAX_JOBS"
 
     # Phase 2: Copy original patterns
     RUNTIME_STATE[PHASE]="copying"
     log_info "Phase 2: Copying original patterns..."
     copy_original_patterns pattern_files "$output_dir"
 
+    # Execute copy jobs
+    log_info "Executing ${#JOB_QUEUE[@]} copy jobs..."
+    execute_job_queue "$MAX_JOBS"
+
     # Phase 3: Create archives
     RUNTIME_STATE[PHASE]="archiving"
     log_info "Phase 3: Creating archives..."
     create_archives "$output_dir"
 
-    # Execute all queued jobs
-    log_info "Executing ${#JOB_QUEUE[@]} queued jobs..."
+    # Execute archive jobs
+    log_info "Executing ${#JOB_QUEUE[@]} archive jobs..."
     execute_job_queue "$MAX_JOBS"
 
     echo >&2  # New line after progress
@@ -1076,6 +1111,6 @@ main() {
 }
 
 # Execute main function only if script is run directly
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+if [[ "${BASH_SOURCE[0]:-$0}" == "${0}" ]]; then
     main "$@"
 fi
