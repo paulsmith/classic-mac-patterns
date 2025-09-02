@@ -123,31 +123,61 @@
             </div>
           </div>
 
-          <div
-            class="pattern-downloads"
-            id="patternDownloads"
-            style="display: none"
-          >
+          <div class="downloads">
             <h2>Downloads</h2>
-            <div class="download-formats" id="downloadFormats">
-              <!-- Populated dynamically from templates -->
+            <div class="download-grid">
+              <div class="download-row">
+                <span class="format-header">PBM (Original)</span>
+                <a href="assets/archives/pbm.zip" class="download-link" download>8×8 pixels</a>
+              </div>
+              <div class="download-row">
+                <span class="format-header">PNG</span>
+                <a href="assets/archives/png_8x8.zip" class="download-link" download>8×8 pixels</a>
+                <a href="assets/archives/png_16x16.zip" class="download-link" download>16×16 pixels</a>
+                <a href="assets/archives/png_32x32.zip" class="download-link" download>32×32 pixels</a>
+                <a href="assets/archives/png_64x64.zip" class="download-link" download>64×64 pixels</a>
+              </div>
+              <div class="download-row">
+                <span class="format-header">GIF</span>
+                <a href="assets/archives/gif_8x8.zip" class="download-link" download>8×8 pixels</a>
+                <a href="assets/archives/gif_16x16.zip" class="download-link" download>16×16 pixels</a>
+                <a href="assets/archives/gif_32x32.zip" class="download-link" download>32×32 pixels</a>
+                <a href="assets/archives/gif_64x64.zip" class="download-link" download>64×64 pixels</a>
+              </div>
+              <div class="download-row">
+                <span class="format-header">WebP</span>
+                <a href="assets/archives/webp_8x8.zip" class="download-link" download>8×8 pixels</a>
+                <a href="assets/archives/webp_16x16.zip" class="download-link" download>16×16 pixels</a>
+                <a href="assets/archives/webp_32x32.zip" class="download-link" download>32×32 pixels</a>
+                <a href="assets/archives/webp_64x64.zip" class="download-link" download>64×64 pixels</a>
+              </div>
+              <div class="download-row">
+                <span class="format-header">AVIF</span>
+                <a href="assets/archives/avif_8x8.zip" class="download-link" download>8×8 pixels</a>
+                <a href="assets/archives/avif_16x16.zip" class="download-link" download>16×16 pixels</a>
+                <a href="assets/archives/avif_32x32.zip" class="download-link" download>32×32 pixels</a>
+                <a href="assets/archives/avif_64x64.zip" class="download-link" download>64×64 pixels</a>
+              </div>
+              <div class="download-row">
+                <span class="format-header">TIFF</span>
+                <a href="assets/archives/tiff_8x8.zip" class="download-link" download>8×8 pixels</a>
+                <a href="assets/archives/tiff_16x16.zip" class="download-link" download>16×16 pixels</a>
+                <a href="assets/archives/tiff_32x32.zip" class="download-link" download>32×32 pixels</a>
+                <a href="assets/archives/tiff_64x64.zip" class="download-link" download>64×64 pixels</a>
+              </div>
+              <div class="download-row">
+                <span class="format-header">ICO</span>
+                <a href="assets/archives/ico_8x8.zip" class="download-link" download>8×8 pixels</a>
+                <a href="assets/archives/ico_16x16.zip" class="download-link" download>16×16 pixels</a>
+                <a href="assets/archives/ico_32x32.zip" class="download-link" download>32×32 pixels</a>
+                <a href="assets/archives/ico_64x64.zip" class="download-link" download>64×64 pixels</a>
+              </div>
             </div>
           </div>
         </div>
       </main>
     </div>
 
-    <!-- Templates for dynamic content generation -->
-    <template id="downloadFormatTemplate">
-      <div class="download-option">
-        <span class="format-label"></span>
-        <div class="resolution-links"></div>
-      </div>
-    </template>
-
-    <template id="downloadLinkTemplate">
-      <a href="#" class="download-link" download></a>
-    </template>
 
     <script src="script.js"></script>
   </body>

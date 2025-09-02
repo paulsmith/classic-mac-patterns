@@ -33,10 +33,9 @@ readonly PATTERNS_DIR="${SCRIPT_DIR}/patterns"
 readonly DEFAULT_OUTPUT_DIR="${SCRIPT_DIR}/assets"
 
 # Format and layout configuration
-readonly FORMATS=(gif png ico avif webp tiff)
+readonly FORMATS=(pbm gif png ico avif webp tiff)
 readonly SCALES=(1 2 4 8)
 readonly SPRITE_LAYOUTS=("1x38" "38x1" "19x2" "2x19")
-readonly ARCHIVE_FORMATS=(zip tar.gz tar.xz)
 
 # Hardware configuration
 MAX_JOBS="${MAX_JOBS:-$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)}"
@@ -281,7 +280,7 @@ validate_format() {
     local format="$1"
 
     case "$format" in
-        gif|png|avif|webp|tiff) return 0 ;;
+        pbm|gif|png|avif|webp|tiff) return 0 ;;
         ico)
             log_debug "ICO format: sprite sheets will be skipped"
             return 0
@@ -391,17 +390,20 @@ calculate_total_jobs() {
     local scale_count=${#SCALES[@]}
     local layout_count=${#SPRITE_LAYOUTS[@]}
 
-    # Individual file conversions
-    local individual_jobs=$((pattern_count * format_count * scale_count))
+    # Individual file conversions (exclude PBM and ICO)
+    # PBM = 1, ICO = 1, so actual conversion formats = format_count - 2
+    local conversion_formats=$((format_count - 1))  # Exclude PBM 
+    local individual_jobs=$((pattern_count * conversion_formats * scale_count))
 
-    # Sprite sheets (ICO format skipped)
-    local sprite_jobs=$(((format_count - 1) * scale_count * layout_count))
+    # Sprite sheets (exclude PBM and ICO formats)
+    local sprite_formats=$((conversion_formats - 1))  # Also exclude ICO
+    local sprite_jobs=$((sprite_formats * scale_count * layout_count))
 
     # PBM copy jobs
     local pbm_jobs=$pattern_count
 
-    # Archive jobs (3 types × 3 formats)
-    local archive_jobs=9
+    # Archive jobs (1 PBM + 6 formats × 4 resolutions each)
+    local archive_jobs=$((1 + conversion_formats * scale_count))
 
     RUNTIME_STATE[TOTAL_JOBS]=$((individual_jobs + sprite_jobs + pbm_jobs + archive_jobs))
 
@@ -592,6 +594,12 @@ process_format_individual() {
 
     log_debug "Processing individual files for format: $format"
 
+    # Skip PBM format as it will be handled separately by copy_original_patterns
+    if [[ "$format" == "pbm" ]]; then
+        log_debug "Skipping PBM format conversion (handled by copy operation)"
+        return 0
+    fi
+
     local format_dir="${output_base_dir}/${format}"
 
     # Generate individual files for each scale
@@ -614,6 +622,12 @@ process_format_sprites() {
     local output_base_dir="$2"
 
     log_debug "Processing sprite sheets for format: $format"
+
+    # Skip PBM format as it doesn't need sprite sheets
+    if [[ "$format" == "pbm" ]]; then
+        log_debug "Skipping PBM sprite sheets (not applicable)"
+        return 0
+    fi
 
     local format_dir="${output_base_dir}/${format}"
 
@@ -648,11 +662,11 @@ copy_original_patterns() {
     done
 }
 
-# Create archives with compression
+# Create format/resolution specific archives
 create_archives() {
     local output_dir="$1"
 
-    log_debug "Creating archives"
+    log_debug "Creating format/resolution specific archives"
 
     local archive_dir="${output_dir}/archives"
     mkdir -p "$archive_dir"
@@ -661,80 +675,64 @@ create_archives() {
     local original_pwd="$PWD"
     cd "$output_dir"
 
-    # Archive individual files
-    for archive_format in "${ARCHIVE_FORMATS[@]}"; do
-        local job_id="archive_individual_${archive_format}"
-        local job_cmd="create_individual_archive '$archive_format' '$archive_dir'"
-        enqueue_job "$job_id" "$job_cmd" "archive"
-    done
+    # Create PBM archive (only one resolution)
+    local job_id="archive_pbm"
+    local job_cmd="create_format_resolution_archive 'pbm' '' '$archive_dir' '$output_dir'"
+    enqueue_job "$job_id" "$job_cmd" "archive"
 
-    # Archive sprite sheets
-    for archive_format in "${ARCHIVE_FORMATS[@]}"; do
-        local job_id="archive_sprites_${archive_format}"
-        local job_cmd="create_sprites_archive '$archive_format' '$archive_dir'"
-        enqueue_job "$job_id" "$job_cmd" "archive"
-    done
+    # Create archives for each format and resolution combination
+    for format in "${FORMATS[@]}"; do
+        # Skip PBM as it's handled separately
+        if [[ "$format" == "pbm" ]]; then
+            continue
+        fi
 
-    # Archive complete collection
-    for archive_format in "${ARCHIVE_FORMATS[@]}"; do
-        local job_id="archive_complete_${archive_format}"
-        local job_cmd="create_complete_archive '$archive_format' '$archive_dir'"
-        enqueue_job "$job_id" "$job_cmd" "archive"
+        for scale in "${SCALES[@]}"; do
+            local size=$((CONFIG[BASE_SIZE] * scale))
+            local job_id="archive_${format}_${size}x${size}"
+            local job_cmd="create_format_resolution_archive '$format' '${scale}x' '$archive_dir' '$output_dir'"
+            enqueue_job "$job_id" "$job_cmd" "archive"
+        done
     done
 
     cd "$original_pwd"
 }
 
-# Archive creation helpers
-create_individual_archive() {
+# Archive creation helper
+create_format_resolution_archive() {
     local format="$1"
-    local archive_dir="$2"
+    local resolution="$2"  # e.g., "1x", "2x", "4x", "8x" or empty for PBM
+    local archive_dir="$3"
+    local output_dir="$4"
 
-    case "$format" in
-        zip)
-            zip -r "${archive_dir}/individual_files.zip" -- */*/pattern_*.* -q
-            ;;
-        tar.gz)
-            tar -czf "${archive_dir}/individual_files.tar.gz" -- */*/pattern_*.*
-            ;;
-        tar.xz)
-            tar -cJf "${archive_dir}/individual_files.tar.xz" -- */*/pattern_*.*
-            ;;
-    esac
-}
+    # Change to the output directory to work with relative paths
+    cd "$output_dir"
 
-create_sprites_archive() {
-    local format="$1"
-    local archive_dir="$2"
-
-    case "$format" in
-        zip)
-            zip -r "${archive_dir}/sprite_sheets.zip" -- */*/sprites_*.* -q 2>/dev/null || true
-            ;;
-        tar.gz)
-            tar -czf "${archive_dir}/sprite_sheets.tar.gz" -- */*/sprites_*.* 2>/dev/null || true
-            ;;
-        tar.xz)
-            tar -cJf "${archive_dir}/sprite_sheets.tar.xz" -- */*/sprites_*.* 2>/dev/null || true
-            ;;
-    esac
-}
-
-create_complete_archive() {
-    local format="$1"
-    local archive_dir="$2"
-
-    case "$format" in
-        zip)
-            zip -r "${archive_dir}/complete.zip" -- */ -x "archives/*" -q
-            ;;
-        tar.gz)
-            tar -czf "${archive_dir}/complete.tar.gz" --exclude="archives" -- */
-            ;;
-        tar.xz)
-            tar -cJf "${archive_dir}/complete.tar.xz" --exclude="archives" -- */
-            ;;
-    esac
+    if [[ "$format" == "pbm" ]]; then
+        # Special case for PBM - all files are in pbm/ directory
+        local pattern_count
+        pattern_count=$(find pbm -name "pattern_*.pbm" -type f 2>/dev/null | wc -l)
+        if [[ "$pattern_count" -gt 0 ]]; then
+            find pbm -name "pattern_*.pbm" -type f | xargs zip -j "${archive_dir}/pbm.zip" -q
+        else
+            log_warn "No PBM pattern files found for archive creation"
+            return 1
+        fi
+    else
+        # For other formats, create resolution-specific archives
+        local size=$((CONFIG[BASE_SIZE] * ${resolution%x}))
+        local source_dir="${format}/${resolution}"
+        
+        # Only include pattern files, exclude sprite sheets
+        local pattern_count
+        pattern_count=$(find "${source_dir}" -name "pattern_*.${format}" -type f 2>/dev/null | wc -l)
+        if [[ "$pattern_count" -gt 0 ]]; then
+            find "${source_dir}" -name "pattern_*.${format}" -type f | xargs zip -j "${archive_dir}/${format}_${size}x${size}.zip" -q
+        else
+            log_warn "No pattern files found in ${source_dir} for ${format} archive creation"
+            return 1
+        fi
+    fi
 }
 
 # =============================================================================

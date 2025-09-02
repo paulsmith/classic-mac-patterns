@@ -6,24 +6,6 @@ function assert(condition, message) {
 }
 
 class MacPatternShowcase {
-  static DOWNLOAD_CONFIG = {
-    formats: [
-      { id: "pbm", label: "PBM", resolutions: ["1x"] },
-      { id: "png", label: "PNG", resolutions: ["1x", "2x", "4x", "8x"] },
-      { id: "gif", label: "GIF", resolutions: ["1x", "2x", "4x", "8x"] },
-      { id: "webp", label: "WebP", resolutions: ["1x", "2x", "4x", "8x"] },
-      { id: "avif", label: "AVIF", resolutions: ["1x", "2x", "4x", "8x"] },
-      { id: "tiff", label: "TIFF", resolutions: ["1x", "2x", "4x", "8x"] },
-      { id: "ico", label: "ICO", resolutions: ["1x", "2x", "4x", "8x"] },
-    ],
-  };
-
-  static RESOLUTION_MAP = {
-    "1x": "8x8",
-    "2x": "16x16",
-    "4x": "32x32",
-    "8x": "64x64",
-  };
 
   constructor() {
     this.patterns = [];
@@ -275,60 +257,7 @@ class MacPatternShowcase {
     });
   }
 
-  generateDownloadUI(pattern) {
-    const container = document.getElementById("downloadFormats");
-    container.innerHTML = ""; // Clear previous content
 
-    const formatTemplate = document.getElementById("downloadFormatTemplate");
-    const linkTemplate = document.getElementById("downloadLinkTemplate");
-
-    MacPatternShowcase.DOWNLOAD_CONFIG.formats.forEach((format) => {
-      // Clone and populate format template
-      const formatClone = formatTemplate.content.cloneNode(true);
-      formatClone.querySelector(".format-label").textContent = format.label;
-      const linksContainer = formatClone.querySelector(".resolution-links");
-
-      format.resolutions.forEach((resolution) => {
-        // Clone and populate link template
-        const linkClone = linkTemplate.content.cloneNode(true);
-        const link = linkClone.querySelector(".download-link");
-
-        link.textContent = MacPatternShowcase.RESOLUTION_MAP[resolution];
-        link.href = this.generateDownloadUrl(pattern, format.id, resolution);
-        link.download = this.generateDownloadFilename(
-          pattern,
-          format.id,
-          resolution,
-        );
-
-        linksContainer.appendChild(linkClone);
-      });
-
-      container.appendChild(formatClone);
-    });
-  }
-
-  generateDownloadUrl(pattern, format, resolution) {
-    const paddedId = pattern.id.toString().padStart(2, "0");
-
-    if (format === "pbm") {
-      return `assets/pbm/pattern_${paddedId}.pbm`;
-    }
-
-    const dim = MacPatternShowcase.RESOLUTION_MAP[resolution];
-    return `assets/${format}/${resolution}/pattern_${paddedId}_${dim}.${format}`;
-  }
-
-  generateDownloadFilename(pattern, format, resolution) {
-    const paddedId = pattern.id.toString().padStart(2, "0");
-
-    if (format === "pbm") {
-      return `macpattern_${paddedId}.pbm`;
-    }
-
-    const dim = MacPatternShowcase.RESOLUTION_MAP[resolution];
-    return `macpattern_${paddedId}_${dim}.${format}`;
-  }
 
   setPageBackground(pattern) {
     const { dataUrl, size } = this.createPageBackgroundPattern(pattern);
@@ -387,7 +316,6 @@ class MacPatternShowcase {
     const patternPreview = document.getElementById("patternPreview");
     const pbmContent = document.getElementById("pbmContent");
     const copyBtn = document.getElementById("copyPbmBtn");
-    const patternDownloads = document.getElementById("patternDownloads");
 
     if (pattern) {
       const status = isSelected ? "Selected" : "Previewing";
@@ -404,20 +332,11 @@ class MacPatternShowcase {
       pbmContent.textContent = pbm;
       copyBtn.setAttribute("data-copy", pbm);
       patternPreview.style.display = "block";
-
-      // Show and generate download links only when a pattern is selected
-      if (isSelected) {
-        this.generateDownloadUI(pattern);
-        patternDownloads.style.display = "block";
-      } else {
-        patternDownloads.style.display = "none";
-      }
     } else {
       // Clear pattern info
       patternStatus.textContent =
         "Click a pattern to preview on the 512×342 display";
       patternPreview.style.display = "none";
-      patternDownloads.style.display = "none";
     }
   }
 

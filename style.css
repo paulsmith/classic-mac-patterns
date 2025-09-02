@@ -363,6 +363,88 @@ header p {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+.downloads {
+  background-color: var(--surface-primary);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
+}
+
+.downloads h2 {
+  margin: 0 0 10px 0;
+  font-size: 24px;
+  color: var(--primary-text);
+  font-family: "Chicago", sans-serif;
+  text-align: center;
+}
+
+.downloads p {
+  margin: 0 0 20px 0;
+  color: var(--secondary-text);
+  text-align: center;
+  font-size: 16px;
+}
+
+.download-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.download-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background-color: var(--surface-secondary);
+  border-radius: 6px;
+  border: 1px solid var(--border-primary);
+}
+
+.format-header {
+  font-weight: bold;
+  font-size: 14px;
+  color: var(--primary-text);
+  min-width: 120px;
+  font-family: "Chicago", sans-serif;
+}
+
+.download-row .download-link {
+  display: inline-block;
+  padding: 6px 12px;
+  color: var(--primary-text);
+  background-color: var(--surface-primary);
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: normal;
+  transition: all 0.2s ease;
+  min-width: 70px;
+  text-align: center;
+  border: 1px solid var(--border-primary);
+  
+  /* Pattern 2 background - recreates the diagonal stripe pattern in monochrome */
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 1px,
+      var(--border-primary) 1px,
+      var(--border-primary) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  background-size: 4px 4px;
+}
+
+.download-row .download-link:hover {
+  border-color: var(--border-hover);
+  background-color: var(--button-secondary);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 /* Accessible Tooltip Styles */
 .tooltip {
   position: absolute;
@@ -509,5 +591,24 @@ header p {
   .resolution-links {
     width: 100%;
     justify-content: flex-start;
+  }
+
+  /* Bulk downloads mobile styles */
+  .download-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .format-header {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .download-row .download-link {
+    min-width: 60px;
+    font-size: 11px;
+    padding: 5px 8px;
   }
 }
