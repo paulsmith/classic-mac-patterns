@@ -14,7 +14,6 @@ class MacPatternShowcase {
     this.desktop = document.getElementById("desktop");
     this.ctx = this.desktop.getContext("2d");
     this.patternInfo = document.getElementById("patternInfo");
-    this.resetButton = document.getElementById("resetButton");
     this.themeToggle = document.getElementById("themeToggle");
 
     this.init();
@@ -199,6 +198,7 @@ class MacPatternShowcase {
       const canvas = document.createElement("canvas");
       canvas.width = 8;
       canvas.height = 8;
+      canvas.classList.add("pixelated");
       const ctx = canvas.getContext("2d");
 
       const imageData = ctx.createImageData(8, 8);
@@ -213,11 +213,6 @@ class MacPatternShowcase {
         }
       }
       ctx.putImageData(imageData, 0, 0);
-
-      // Scale up the canvas for better visibility
-      canvas.style.width = "100%";
-      canvas.style.height = "100%";
-      canvas.classList.add("pixelated");
 
       patternElement.appendChild(canvas);
 
@@ -245,10 +240,6 @@ class MacPatternShowcase {
   }
 
   setupEventListeners() {
-    this.resetButton.addEventListener("click", () => {
-      this.resetDisplay();
-    });
-
     this.themeToggle.addEventListener("click", () => {
       this.toggleTheme();
     });
@@ -341,7 +332,7 @@ class MacPatternShowcase {
     } else {
       // Clear pattern info
       patternStatus.textContent =
-        "Click a pattern to preview on the 512×384 display";
+        "Click a pattern to preview on the 512×342 display";
       patternPreview.style.display = "none";
     }
   }

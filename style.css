@@ -1,5 +1,5 @@
 /* ABOUTME: CSS styling for Macintosh desktop patterns showcase */
-/* ABOUTME: Includes virtual 512x384 display styling, pattern grid layout, responsive design, and dark mode support */
+/* ABOUTME: Includes virtual 512x342 display styling, pattern grid layout, responsive design, and dark mode support */
 
 @font-face {
   font-family: "Geneva";
@@ -232,6 +232,7 @@ header p {
 
 .pattern-info .pattern-preview pre {
   font-family: "Courier New", monospace;
+  font-size: 16px;
   line-height: 1;
   margin: 0;
   letter-spacing: 1px;
@@ -331,7 +332,7 @@ header p {
 
 .screen {
   width: 518px;
-  height: 390px;
+  height: 348px;
   background-color: #000;
   border: 3px solid var(--screen-border);
   border-radius: 8px;
@@ -341,7 +342,7 @@ header p {
 
 .desktop {
   width: 512px;
-  height: 384px;
+  height: 342px;
   background-color: var(--canvas-white);
 }
 
