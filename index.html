@@ -122,9 +122,32 @@
               </div>
             </div>
           </div>
+
+          <div
+            class="pattern-downloads"
+            id="patternDownloads"
+            style="display: none"
+          >
+            <h2>Downloads</h2>
+            <div class="download-formats" id="downloadFormats">
+              <!-- Populated dynamically from templates -->
+            </div>
+          </div>
         </div>
       </main>
     </div>
+
+    <!-- Templates for dynamic content generation -->
+    <template id="downloadFormatTemplate">
+      <div class="download-option">
+        <span class="format-label"></span>
+        <div class="resolution-links"></div>
+      </div>
+    </template>
+
+    <template id="downloadLinkTemplate">
+      <a href="#" class="download-link" download></a>
+    </template>
 
     <script src="script.js"></script>
   </body>

@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:www.macintoshrepository.org)",
+      "WebFetch(domain:archive.org)",
+      "WebFetch(domain:css-tricks.com)",
+      "Bash(convert:*)",
+      "Bash(sysctl:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

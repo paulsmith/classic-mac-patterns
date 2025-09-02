@@ -28,9 +28,9 @@
   --surface-secondary: light-dark(#f8f8f8, #2a2a2a);
   --border-primary: light-dark(#ddd, #555);
   --border-hover: light-dark(#333, #ccc);
-  --border-active: light-dark(#007aff, #4a9fff);
-  --button-primary: light-dark(#007aff, #4a9fff);
-  --button-primary-hover: light-dark(#0056cc, #2b7fe8);
+  --border-active: light-dark(#333, #ccc);
+  --button-primary: light-dark(#666666, #4a9fff);
+  --button-primary-hover: light-dark(#555555, #2b7fe8);
   --button-secondary: light-dark(#f8f9fa, #3a3a3a);
   --tooltip-background: light-dark(#333, #555);
   --tooltip-text: light-dark(white, #f0f0f0);
@@ -44,6 +44,9 @@
   /* Pattern background colors for JavaScript consumption */
   --pattern-bg-dark: #e8e8e8;
   --pattern-bg-light: #f8f8f8;
+
+  /* Pattern colors for download buttons */
+  --pattern-button-dark: light-dark(rgba(255, 255, 255, 0.3), rgba(0, 0, 0, 0.3));
 }
 
 /* Dark theme overrides for JavaScript variables */
@@ -212,7 +215,8 @@ header p {
 
 .pattern-item.active {
   border-color: var(--border-active);
-  border-width: 3px;
+  border-width: 5px;
+  border-style: dashed;
   transform: scale(1.1);
 }
 
@@ -278,6 +282,85 @@ header p {
 
 .pbm-label:hover {
   background-color: color-mix(in srgb, var(--border-active) 10%, transparent);
+}
+
+.pattern-downloads {
+  background-color: var(--surface-primary);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
+}
+
+.pattern-downloads h2 {
+  margin: 0 0 20px 0;
+  font-size: 24px;
+  color: var(--primary-text);
+  font-family: "Chicago", sans-serif;
+}
+
+.download-formats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.download-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background-color: var(--surface-primary);
+  border-radius: 4px;
+  border: 1px solid var(--border-primary);
+}
+
+.format-label {
+  font-weight: bold;
+  font-size: 13px;
+  color: var(--primary-text);
+  min-width: 50px;
+  text-align: left;
+}
+
+.resolution-links {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.download-link {
+  display: inline-block;
+  padding: 4px 8px;
+  color: white;
+  text-decoration: none;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  min-width: 45px;
+  text-align: center;
+  position: relative;
+  
+  /* Pattern 2 background - recreates the diagonal stripe pattern */
+  background-color: var(--button-primary);
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 1px,
+      var(--pattern-button-dark) 1px,
+      var(--pattern-button-dark) 2px,
+      transparent 2px,
+      transparent 3px
+    );
+  background-size: 4px 4px;
+}
+
+.download-link:hover {
+  background-color: var(--button-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Accessible Tooltip Styles */
@@ -414,5 +497,17 @@ header p {
 
   .bezel {
     padding: 20px 15px 30px 15px;
+  }
+
+  .download-option {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 10px;
+  }
+
+  .resolution-links {
+    width: 100%;
+    justify-content: flex-start;
   }
 }
