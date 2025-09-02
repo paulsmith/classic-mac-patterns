@@ -1,6 +1,20 @@
 /* ABOUTME: CSS styling for Macintosh desktop patterns showcase */
 /* ABOUTME: Includes virtual 512x384 display styling, pattern grid layout, responsive design, and dark mode support */
 
+@font-face {
+  font-family: "Geneva";
+  src: url("/fonts/geneva-9-2.otf.woff2") format("woff2");
+  font-display: swap;
+  font-weight: normal normal;
+}
+
+@font-face {
+  font-family: "Chicago";
+  src: url("/fonts/chicago-12-1.otf.woff2") format("woff2");
+  font-display: swap;
+  font-weight: normal normal;
+}
+
 :root {
   color-scheme: light dark;
 
@@ -57,14 +71,18 @@ body.light-theme {
 }
 
 body {
-  font-family: "Berkeley Mono", Monaco, "Courier New", monospace;
+  font-family: "Geneva", sans-serif;
+  font-size: 24px;
   background-color: var(--primary-background);
   color: var(--primary-text);
-  line-height: 1.6;
   transition:
     background-image 0.3s ease,
     background-color 0.4s,
     color 0.4s;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Chicago", sans-serif;
 }
 
 .container {
@@ -87,7 +105,6 @@ header {
 }
 
 header h1 {
-  font-size: 2.5rem;
   margin-bottom: 10px;
   font-weight: bold;
 }
@@ -130,7 +147,6 @@ body.dark-theme .sun-icon {
 }
 
 header p {
-  font-size: 1.1rem;
   color: var(--secondary-text);
 }
 
@@ -143,7 +159,6 @@ header p {
 
 .patterns-section h2,
 .display-section h2 {
-  font-size: 1.5rem;
   margin-bottom: 20px;
   text-align: center;
 }
@@ -206,7 +221,6 @@ header p {
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  font-size: 0.9rem;
 }
 
 .pattern-info .pattern-preview {
@@ -218,7 +232,6 @@ header p {
 
 .pattern-info .pattern-preview pre {
   font-family: "Courier New", monospace;
-  font-size: 0.8rem;
   line-height: 1;
   margin: 0;
   letter-spacing: 1px;
@@ -269,7 +282,6 @@ header p {
   color: var(--tooltip-text);
   padding: 8px 12px;
   border-radius: 4px;
-  font-size: 0.85rem;
   line-height: 1.4;
   max-width: 300px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
@@ -345,7 +357,6 @@ header p {
   padding: 6px 12px;
   border-radius: 3px;
   cursor: pointer;
-  font-size: 0.875rem;
   font-weight: normal;
   transition: all 0.2s ease;
 }
@@ -382,7 +393,6 @@ header p {
   }
 
   header h1 {
-    font-size: 2rem;
   }
 
   .patterns-grid {
