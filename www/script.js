@@ -130,6 +130,24 @@ class MacPatternShowcase {
     return patterns;
   }
 
+  createBackgroundPattern(pattern) {
+    const canvasSize = 8;
+    const canvas = document.createElement("canvas");
+    canvas.width = canvasSize;
+    canvas.height = canvasSize;
+    const ctx = canvas.getContext("2d");
+
+    for (let y = 0; y < 8; y++) {
+      for (let x = 0; x < 8; x++) {
+        const bit = pattern.binaryPattern[y][x];
+        ctx.fillStyle = bit ? '#000000' : '#ffffff';
+        ctx.fillRect(x, y, 1, 1);
+      }
+    }
+
+    return canvas.toDataURL();
+  }
+
   createPageBackgroundPattern(pattern) {
     // Create a "fat bits" background pattern - scale 8x8 for chunky pixelation
     const scale = 4;
@@ -235,6 +253,9 @@ class MacPatternShowcase {
 
       this.patternsGrid.appendChild(patternElement);
     });
+
+    const standardGray = this.createBackgroundPattern(this.patterns[3]);
+    this.patternsGrid.style.backgroundImage = `url(${standardGray})`;
   }
 
   setupEventListeners() {

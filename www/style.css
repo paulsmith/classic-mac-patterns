@@ -24,8 +24,8 @@
   );
   --surface-secondary: light-dark(#f8f8f8, #2a2a2a);
   --border-primary: light-dark(#ddd, #555);
-  --border-hover: light-dark(#999, #ccc);
-  --border-active: light-dark(#999, #ccc);
+  --border-hover: light-dark(#666, #999);
+  --border-active: light-dark(#666, #999);
   --button-primary: light-dark(#666666, #4a9fff);
   --button-primary-hover: light-dark(#555555, #2b7fe8);
   --button-secondary: light-dark(#f8f9fa, #3a3a3a);
