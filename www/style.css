@@ -154,6 +154,7 @@ body.dark-theme .sun-icon {
 
 header {
   p {
+    font-size: 28px;
     color: var(--secondary-text);
     margin-bottom: 0.5rem;
   }
