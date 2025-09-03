@@ -1,3 +1,0 @@
-PAT# resource ID: 0
-Patterns: 38
-Files: pattern_000.pbm to pattern_037.pbm

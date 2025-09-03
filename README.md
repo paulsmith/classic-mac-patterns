@@ -1,4 +1,4 @@
-# Classic Mac Desktop Patterns
+# Classic Mac Patterns
 
 The 38 original 8×8-pixel black and white patterns from Macintosh System 1 Control Panel and MacPaint, extracted from the PAT# resource in the System file.
 
@@ -6,7 +6,7 @@ The 38 original 8×8-pixel black and white patterns from Macintosh System 1 Contr
 
 ## Web Viewer
 
-Visit <a href="https://paulsmith.github.io/mac-desktop-patterns/">https://paulsmith.github.io/mac-desktop-patterns/</a> to browse and download patterns.
+Visit https://paulsmith.github.io/classic-mac-patterns/ to browse and download patterns.
 
 ## Formats
 
