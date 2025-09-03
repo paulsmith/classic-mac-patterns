@@ -26,8 +26,6 @@
   --border-primary: light-dark(#ddd, #555);
   --border-hover: light-dark(#666, #999);
   --border-active: light-dark(#666, #999);
-  --button-primary: light-dark(#666666, #4a9fff);
-  --button-primary-hover: light-dark(#555555, #2b7fe8);
   --button-secondary: light-dark(#f8f9fa, #3a3a3a);
   --tooltip-background: light-dark(#333, #555);
   --tooltip-text: light-dark(white, #f0f0f0);
@@ -37,18 +35,13 @@
   --bezel-border-dark: light-dark(#ddd, #444);
   --screen-border: light-dark(#333, #666);
   --canvas-white: white; /* Keep patterns black and white for authenticity */
-  --link-color: light-dark(#999, 999);
+  --link-color: light-dark(#999, #999);
   --theme-toggle-background: light-dark(#1a1a1a, #f5f5f5);
 
   /* Pattern background colors for JavaScript consumption */
   --pattern-bg-dark: #e8e8e8;
   --pattern-bg-light: #f8f8f8;
 
-  /* Pattern colors for download buttons */
-  --pattern-button-dark: light-dark(
-    rgba(255, 255, 255, 0.3),
-    rgba(0, 0, 0, 0.3)
-  );
 }
 
 a {
@@ -442,10 +435,6 @@ footer {
   background-color: var(--canvas-white);
 }
 
-.controls {
-  margin-top: 20px;
-  text-align: center;
-}
 
 @media (max-width: 1200px) {
   .showcase {
