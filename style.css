@@ -1,6 +1,3 @@
-/* ABOUTME: CSS styling for Macintosh desktop patterns showcase */
-/* ABOUTME: Includes virtual 512x342 display styling, pattern grid layout, responsive design, and dark mode support */
-
 @font-face {
   font-family: "Geneva";
   src: url("/fonts/geneva-9-2.otf.woff2") format("woff2");
@@ -27,8 +24,8 @@
   );
   --surface-secondary: light-dark(#f8f8f8, #2a2a2a);
   --border-primary: light-dark(#ddd, #555);
-  --border-hover: light-dark(#333, #ccc);
-  --border-active: light-dark(#333, #ccc);
+  --border-hover: light-dark(#999, #ccc);
+  --border-active: light-dark(#999, #ccc);
   --button-primary: light-dark(#666666, #4a9fff);
   --button-primary-hover: light-dark(#555555, #2b7fe8);
   --button-secondary: light-dark(#f8f9fa, #3a3a3a);
@@ -54,10 +51,10 @@
 }
 
 a {
-    color: var(--link-color);
-    text-underline-offset: 0.2em;
-    text-decoration-thickness: 3px;
-    text-decoration-style: dashed;
+  color: var(--link-color);
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 3px;
+  text-decoration-style: dashed;
 }
 
 /* Dark theme overrides for JavaScript variables */
@@ -89,10 +86,6 @@ body {
   font-size: 24px;
   background-color: var(--primary-background);
   color: var(--primary-text);
-  transition:
-    background-image 0.3s ease,
-    background-color 0.4s,
-    color 0.4s;
 }
 
 h1,
@@ -137,7 +130,6 @@ header h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
   color: var(--secondary-text);
   position: absolute;
   right: 0;
@@ -147,11 +139,6 @@ header h1 {
   border-color: var(--border-active);
   color: var(--border-active);
   background-color: var(--button-secondary);
-}
-
-.sun-icon,
-.moon-icon {
-  transition: opacity 0.2s ease;
 }
 
 /* Theme icon visibility controlled by JavaScript classes */
@@ -165,8 +152,20 @@ body.dark-theme .sun-icon {
   display: block;
 }
 
-header p {
-  color: var(--secondary-text);
+header {
+  p {
+    color: var(--secondary-text);
+    margin-bottom: 0.5rem;
+  }
+}
+
+footer {
+  margin-top: 40px;
+  margin-bottom: 20px;
+  p {
+    color: var(--secondary-text);
+    text-align: center;
+  }
 }
 
 .showcase {
@@ -200,9 +199,9 @@ header p {
 }
 
 .patterns-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-  gap: 8px;
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
   margin-bottom: 20px;
   padding: 20px;
   background-color: var(--surface-primary);
@@ -211,24 +210,19 @@ header p {
 }
 
 .pattern-item {
-  width: 50px;
-  height: 50px;
-  border: 2px solid var(--border-primary);
+  width: 56px;
+  height: 56px;
+  border: 4px solid transparent;
   cursor: pointer;
-  transition: all 0.2s ease;
-  background-color: var(--canvas-white);
 }
 
 .pattern-item:hover {
   border-color: var(--border-hover);
-  transform: scale(1.1);
 }
 
 .pattern-item.active {
   border-color: var(--border-active);
-  border-width: 5px;
   border-style: dashed;
-  transform: scale(1.1);
 }
 
 .pattern-item canvas {
@@ -251,7 +245,7 @@ header p {
 }
 
 .pattern-info .pattern-preview pre {
-  font-family: "Courier New", monospace;
+  font-family: Courier, monospace;
   font-size: 16px;
   line-height: 1;
   margin: 0;
@@ -266,7 +260,6 @@ header p {
   margin-left: 8px;
   cursor: pointer;
   color: var(--secondary-text);
-  transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -290,7 +283,6 @@ header p {
   border-bottom: 1px dotted var(--secondary-text);
   font-weight: bold;
   border-radius: 2px;
-  transition: background-color 0.2s ease;
 }
 
 .pbm-label:hover {
@@ -352,7 +344,6 @@ header p {
   border-radius: 4px;
   font-size: 16px;
   font-weight: normal;
-  transition: all 0.2s ease;
   min-width: 70px;
   text-align: center;
   border: 1px solid var(--border-primary);
@@ -391,10 +382,6 @@ header p {
   opacity: 0;
   visibility: hidden;
   transform: translateY(-5px);
-  transition:
-    opacity 0.2s ease,
-    visibility 0.2s ease,
-    transform 0.2s ease;
   pointer-events: none;
 }
 
@@ -457,22 +444,6 @@ header p {
 .controls {
   margin-top: 20px;
   text-align: center;
-}
-
-.reset-btn {
-  background: transparent;
-  color: var(--secondary-text);
-  border: 1px solid var(--border-primary);
-  padding: 6px 12px;
-  border-radius: 3px;
-  cursor: pointer;
-  font-weight: normal;
-  transition: all 0.2s ease;
-}
-
-.reset-btn:hover {
-  border-color: var(--border-hover);
-  background-color: var(--button-secondary);
 }
 
 @media (max-width: 1200px) {

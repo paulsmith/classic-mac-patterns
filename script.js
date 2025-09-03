@@ -1,6 +1,3 @@
-// ABOUTME: JavaScript for interactive Macintosh desktop pattern showcase
-// ABOUTME: Handles pattern loading, tiling display, and user interactions with Mac Plus virtual screen
-
 function assert(condition, message) {
   if (!condition) throw message || "Assertion failed";
 }
@@ -11,6 +8,8 @@ class MacPatternShowcase {
     this.currentPattern = null;
     this.patternsGrid = document.getElementById("patternsGrid");
     this.patternTmpl = document.getElementById("patternTmpl");
+    this.downloadRowTmpl = document.getElementById("downloadRowTmpl");
+    this.downloadLinkTmpl = document.getElementById("downloadLinkTmpl");
     this.loadingIndicator = document.getElementById("loadingIndicator");
     this.desktop = document.getElementById("desktop");
     this.ctx = this.desktop.getContext("2d");
@@ -28,6 +27,7 @@ class MacPatternShowcase {
     this.setupTooltip();
     this.setupCopyButton();
     this.initializeWithRandomPattern();
+    this.createDownloadLinks();
   }
 
   initTheme() {
@@ -188,15 +188,18 @@ class MacPatternShowcase {
   createPatternGrid() {
     // Hide loading indicator and show patterns grid
     this.loadingIndicator.style.display = "none";
-    this.patternsGrid.style.display = "grid";
+    this.patternsGrid.style.display = "flex";
 
     this.patterns.forEach((pattern) => {
       const clone = document.importNode(this.patternTmpl.content, true);
       const patternElement = clone.firstElementChild;
-      patternElement.dataset.patternId = pattern.id;
+      patternElement.dataset.patternid = pattern.id;
 
       // Create visual pattern preview directly from binary data
-      const ctx = clone.querySelector("canvas").getContext("2d");
+      const canvas = clone.querySelector("canvas");
+      canvas.width = 8;
+      canvas.height = 8;
+      const ctx = canvas.getContext("2d");
 
       const imageData = ctx.createImageData(8, 8);
       for (let y = 0; y < 8; y++) {
@@ -455,21 +458,21 @@ class MacPatternShowcase {
       });
   }
 
-  resetDisplay() {
-    this.currentPattern = null;
-    // Clear canvas with white background
-    this.ctx.fillStyle = "#ffffff";
-    this.ctx.fillRect(0, 0, this.desktop.width, this.desktop.height);
-    this.updatePatternInfo(null, false);
-
-    // Clear page background pattern
-    document.body.style.backgroundImage = "";
-    document.body.style.backgroundRepeat = "";
-    document.body.style.backgroundSize = "";
-
-    // Remove active class from all pattern items
-    document.querySelectorAll(".pattern-item").forEach((item) => {
-      item.classList.remove("active");
+  createDownloadLinks() {
+    const resolutions = ["8x8", "16x16", "32x32", "64x64"];
+    const formats = ["PBM", "PNG", "GIF", "WebP", "AVIF", "TIFF", "ICO"];
+    formats.forEach((format) => {
+      const row = document.importNode(this.downloadRowTmpl.content, true);
+      row.querySelector(".format-header").textContent = format;
+      resolutions.forEach((res) => {
+        if (format === "PBM" && res !== "8x8") return;
+        const link = document.importNode(this.downloadLinkTmpl.content, true);
+        const url = `assets/archives/${format.toLowerCase()}_${res}.zip`;
+        link.firstElementChild.href = url;
+        link.firstElementChild.textContent = res;
+        row.firstElementChild.appendChild(link);
+      });
+      document.querySelector(".download-grid").appendChild(row);
     });
   }
 }
