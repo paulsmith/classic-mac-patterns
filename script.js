@@ -6,7 +6,6 @@ function assert(condition, message) {
 }
 
 class MacPatternShowcase {
-
   constructor() {
     this.patterns = [];
     this.currentPattern = null;
@@ -252,8 +251,6 @@ class MacPatternShowcase {
     });
   }
 
-
-
   setPageBackground(pattern) {
     const { dataUrl, size } = this.createPageBackgroundPattern(pattern);
     document.body.style.backgroundImage = `url(${dataUrl})`;
@@ -433,7 +430,7 @@ class MacPatternShowcase {
       .then(() => {
         const originalText = button.innerHTML;
         button.innerHTML = "✓";
-        button.style.color = "#4CAF50";
+        button.style.color = "#999999";
         setTimeout(() => {
           button.innerHTML = originalText;
           button.style.color = "";

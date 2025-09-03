@@ -46,7 +46,10 @@
   --pattern-bg-light: #f8f8f8;
 
   /* Pattern colors for download buttons */
-  --pattern-button-dark: light-dark(rgba(255, 255, 255, 0.3), rgba(0, 0, 0, 0.3));
+  --pattern-button-dark: light-dark(
+    rgba(255, 255, 255, 0.3),
+    rgba(0, 0, 0, 0.3)
+  );
 }
 
 /* Dark theme overrides for JavaScript variables */
@@ -259,6 +262,8 @@ header p {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  height: 26px;
+  width: 26px;
 }
 
 .copy-btn:hover {
@@ -341,19 +346,18 @@ header p {
   min-width: 45px;
   text-align: center;
   position: relative;
-  
+
   /* Pattern 2 background - recreates the diagonal stripe pattern */
   background-color: var(--button-primary);
-  background-image: 
-    repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 1px,
-      var(--pattern-button-dark) 1px,
-      var(--pattern-button-dark) 2px,
-      transparent 2px,
-      transparent 3px
-    );
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 1px,
+    var(--pattern-button-dark) 1px,
+    var(--pattern-button-dark) 2px,
+    transparent 2px,
+    transparent 3px
+  );
   background-size: 4px 4px;
 }
 
@@ -423,18 +427,17 @@ header p {
   min-width: 70px;
   text-align: center;
   border: 1px solid var(--border-primary);
-  
+
   /* Pattern 2 background - recreates the diagonal stripe pattern in monochrome */
-  background-image: 
-    repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 1px,
-      var(--border-primary) 1px,
-      var(--border-primary) 1px,
-      transparent 1px,
-      transparent 3px
-    );
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 1px,
+    var(--border-primary) 1px,
+    var(--border-primary) 1px,
+    transparent 1px,
+    transparent 3px
+  );
   background-size: 4px 4px;
 }
 
