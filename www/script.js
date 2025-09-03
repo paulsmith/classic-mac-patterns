@@ -291,8 +291,10 @@ class MacPatternShowcase {
 
   initializeWithRandomPattern() {
     if (this.patterns.length > 0) {
-      const randomPattern =
-        this.patterns[Math.floor(Math.random() * this.patterns.length)];
+      let patnum = Math.floor(Math.random() * this.patterns.length);
+      while (patnum === 0 || patnum === 19) // black or white
+        patnum = Math.floor(Math.random() * this.patterns.length);
+      const randomPattern = this.patterns[patnum];
       this.currentPattern = randomPattern;
       this.setPageBackground(randomPattern);
       this.renderPatternToCanvas(randomPattern);
