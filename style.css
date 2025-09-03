@@ -40,6 +40,7 @@
   --bezel-border-dark: light-dark(#ddd, #444);
   --screen-border: light-dark(#333, #666);
   --canvas-white: white; /* Keep patterns black and white for authenticity */
+  --link-color: light-dark(#999, 999);
 
   /* Pattern background colors for JavaScript consumption */
   --pattern-bg-dark: #e8e8e8;
@@ -50,6 +51,13 @@
     rgba(255, 255, 255, 0.3),
     rgba(0, 0, 0, 0.3)
   );
+}
+
+a {
+    color: var(--link-color);
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 3px;
+    text-decoration-style: dashed;
 }
 
 /* Dark theme overrides for JavaScript variables */
@@ -289,84 +297,6 @@ header p {
   background-color: color-mix(in srgb, var(--border-active) 10%, transparent);
 }
 
-.pattern-downloads {
-  background-color: var(--surface-primary);
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  margin-top: 30px;
-}
-
-.pattern-downloads h2 {
-  margin: 0 0 20px 0;
-  font-size: 24px;
-  color: var(--primary-text);
-  font-family: "Chicago", sans-serif;
-}
-
-.download-formats {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.download-option {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 10px;
-  background-color: var(--surface-primary);
-  border-radius: 4px;
-  border: 1px solid var(--border-primary);
-}
-
-.format-label {
-  font-weight: bold;
-  font-size: 13px;
-  color: var(--primary-text);
-  min-width: 50px;
-  text-align: left;
-}
-
-.resolution-links {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.download-link {
-  display: inline-block;
-  padding: 4px 8px;
-  color: white;
-  text-decoration: none;
-  border-radius: 3px;
-  font-size: 12px;
-  font-weight: bold;
-  transition: all 0.2s ease;
-  min-width: 45px;
-  text-align: center;
-  position: relative;
-
-  /* Pattern 2 background - recreates the diagonal stripe pattern */
-  background-color: var(--button-primary);
-  background-image: repeating-linear-gradient(
-    45deg,
-    transparent,
-    transparent 1px,
-    var(--pattern-button-dark) 1px,
-    var(--pattern-button-dark) 2px,
-    transparent 2px,
-    transparent 3px
-  );
-  background-size: 4px 4px;
-}
-
-.download-link:hover {
-  background-color: var(--button-primary-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
 .downloads {
   background-color: var(--surface-primary);
   padding: 20px;
@@ -379,7 +309,6 @@ header p {
   margin: 0 0 10px 0;
   font-size: 24px;
   color: var(--primary-text);
-  font-family: "Chicago", sans-serif;
   text-align: center;
 }
 
@@ -421,7 +350,7 @@ header p {
   background-color: var(--surface-primary);
   text-decoration: none;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: normal;
   transition: all 0.2s ease;
   min-width: 70px;
@@ -494,13 +423,19 @@ header p {
 
 .bezel {
   background: linear-gradient(145deg, var(--bezel-light), var(--bezel-dark));
-  padding: 40px 30px 60px 30px;
+  padding: 40px 30px 40px 30px;
   border-radius: 20px;
   box-shadow:
     inset 0 0 0 4px var(--bezel-border-light),
     inset 0 0 0 8px var(--bezel-border-dark),
     0 10px 30px rgba(0, 0, 0, 0.3);
   position: relative;
+
+  p {
+    text-align: center;
+    margin-top: 1em;
+    color: var(--secondary-text);
+  }
 }
 
 .screen {
@@ -540,7 +475,6 @@ header p {
   background-color: var(--button-secondary);
 }
 
-/* Responsive Design */
 @media (max-width: 1200px) {
   .showcase {
     grid-template-columns: 1fr;
@@ -566,9 +500,6 @@ header p {
     position: static;
   }
 
-  header h1 {
-  }
-
   .patterns-grid {
     grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
     gap: 6px;
@@ -584,19 +515,6 @@ header p {
     padding: 20px 15px 30px 15px;
   }
 
-  .download-option {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-    padding: 10px;
-  }
-
-  .resolution-links {
-    width: 100%;
-    justify-content: flex-start;
-  }
-
-  /* Bulk downloads mobile styles */
   .download-row {
     flex-direction: column;
     align-items: flex-start;
