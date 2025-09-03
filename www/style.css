@@ -34,7 +34,7 @@
   --bezel-border-light: light-dark(#e8e8e8, #555);
   --bezel-border-dark: light-dark(#ddd, #444);
   --screen-border: light-dark(#333, #666);
-  --canvas-white: white; /* Keep patterns black and white for authenticity */
+  --canvas-white: white;
   --link-color: light-dark(#999, #999);
   --theme-toggle-background: light-dark(#1a1a1a, #f5f5f5);
 
@@ -56,7 +56,7 @@ body.dark-theme {
   --pattern-bg-light: #1a1a1a;
 }
 
-/* Light theme overrides (explicit for consistency) */
+/* Light theme overrides */
 body.light-theme {
   --pattern-bg-dark: #e8e8e8;
   --pattern-bg-light: #f8f8f8;
@@ -133,7 +133,6 @@ header h1 {
   color: var(--border-active);
 }
 
-/* Theme icon visibility controlled by JavaScript classes */
 body.light-theme .sun-icon,
 body.dark-theme .moon-icon {
   display: none;
@@ -341,7 +340,6 @@ footer {
   text-align: center;
   border: 1px solid var(--border-primary);
 
-  /* Pattern 2 background - recreates the diagonal stripe pattern in monochrome */
   background-image: repeating-linear-gradient(
     45deg,
     transparent,
@@ -361,7 +359,6 @@ footer {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Accessible Tooltip Styles */
 .tooltip {
   position: absolute;
   z-index: 1000;
