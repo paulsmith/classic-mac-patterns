@@ -41,7 +41,6 @@
   /* Pattern background colors for JavaScript consumption */
   --pattern-bg-dark: #e8e8e8;
   --pattern-bg-light: #f8f8f8;
-
 }
 
 a {
@@ -434,7 +433,6 @@ footer {
   height: 342px;
   background-color: var(--canvas-white);
 }
-
 
 @media (max-width: 1200px) {
   .showcase {

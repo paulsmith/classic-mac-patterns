@@ -140,7 +140,7 @@ class MacPatternShowcase {
     for (let y = 0; y < 8; y++) {
       for (let x = 0; x < 8; x++) {
         const bit = pattern.binaryPattern[y][x];
-        ctx.fillStyle = bit ? '#000000' : '#ffffff';
+        ctx.fillStyle = bit ? "#000000" : "#ffffff";
         ctx.fillRect(x, y, 1, 1);
       }
     }
