@@ -99,17 +99,15 @@ h6 {
 header {
   text-align: center;
   margin-bottom: 40px;
-}
 
-.header-top {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  position: relative;
-}
+  .header-top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+  }
 
-header {
   h1 {
     margin-bottom: 10px;
     font-weight: bold;
@@ -304,7 +302,6 @@ footer {
 
 .downloads h2 {
   margin: 0 0 10px 0;
-  font-size: 24px;
   color: var(--primary-text);
   text-align: center;
 }
@@ -474,11 +471,6 @@ footer {
     padding: 10px;
   }
 
-  .header-top {
-    flex-direction: column;
-    gap: 15px;
-  }
-
   .theme-toggle {
     position: static;
   }
@@ -503,5 +495,26 @@ footer {
 
   .bezel {
     padding: 20px 15px 30px 15px;
+    width: 100%;
+    p {
+      display: none;
+    }
+  }
+
+  .screen {
+    width: 100%;
+  }
+
+  h1 {
+    font-size: 36px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  .patterns-section h2,
+  .display-section h2 {
+    margin-bottom: 10px;
   }
 }
