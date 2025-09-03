@@ -14,7 +14,7 @@ help: ## Show this help message
 
 format: ## Format source code
 	uv run ruff format extract.py
-	npx prettier -w index.html script.js style.css
+	npx prettier -w www/index.html www/script.js www/style.css
 
 typecheck: ## Run type checking with mypy
 	uv run mypy extract.py
@@ -22,7 +22,7 @@ typecheck: ## Run type checking with mypy
 check: format typecheck ## Run all checks (format and typecheck)
 
 web: ## Run web server
-	python -m http.server
+	python -m http.server -d www
 
-patterns/patterns.pbm:
+www/patterns.pbm: ## Generate tiled PBM for website
 	magick montage -tile 1x38 -geometry 8x8+0+0 -compress none patterns/pattern_0*.pbm $@

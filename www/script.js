@@ -86,7 +86,7 @@ class MacPatternShowcase {
   }
 
   async fetchPbmData() {
-    const response = await fetch(`patterns/patterns.pbm`);
+    const response = await fetch(`patterns.pbm`);
     return await response.text();
   }
 

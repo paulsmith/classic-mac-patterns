@@ -1,4 +1,4 @@
-#!/etc/profiles/per-user/paul/bin/bash
+#!/bin/bash
 # ABOUTME: Professional Mac desktop pattern generator with robust error handling and parallel processing
 # ABOUTME: Generates patterns in multiple formats, resolutions, and layouts using modern software engineering practices
 
@@ -28,7 +28,7 @@ declare -A CONFIG=(
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 readonly SCRIPT_DIR
 readonly PATTERNS_DIR="${SCRIPT_DIR}/patterns"
-readonly DEFAULT_OUTPUT_DIR="${SCRIPT_DIR}/assets"
+readonly DEFAULT_OUTPUT_DIR="${SCRIPT_DIR}/www/assets"
 
 # Format and layout configuration
 readonly FORMATS=(pbm gif png ico avif webp tiff)
