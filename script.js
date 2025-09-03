@@ -11,6 +11,7 @@ class MacPatternShowcase {
     this.patterns = [];
     this.currentPattern = null;
     this.patternsGrid = document.getElementById("patternsGrid");
+    this.patternTmpl = document.getElementById("patternTmpl");
     this.loadingIndicator = document.getElementById("loadingIndicator");
     this.desktop = document.getElementById("desktop");
     this.ctx = this.desktop.getContext("2d");
@@ -191,16 +192,12 @@ class MacPatternShowcase {
     this.patternsGrid.style.display = "grid";
 
     this.patterns.forEach((pattern) => {
-      const patternElement = document.createElement("div");
-      patternElement.className = "pattern-item";
+      const clone = document.importNode(this.patternTmpl.content, true);
+      const patternElement = clone.firstElementChild;
       patternElement.dataset.patternId = pattern.id;
 
       // Create visual pattern preview directly from binary data
-      const canvas = document.createElement("canvas");
-      canvas.width = 8;
-      canvas.height = 8;
-      canvas.classList.add("pixelated");
-      const ctx = canvas.getContext("2d");
+      const ctx = clone.querySelector("canvas").getContext("2d");
 
       const imageData = ctx.createImageData(8, 8);
       for (let y = 0; y < 8; y++) {
@@ -214,8 +211,6 @@ class MacPatternShowcase {
         }
       }
       ctx.putImageData(imageData, 0, 0);
-
-      patternElement.appendChild(canvas);
 
       // Add hover and click handlers
       patternElement.addEventListener("mouseenter", () => {
