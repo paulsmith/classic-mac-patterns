@@ -1,13 +1,13 @@
 @font-face {
   font-family: "Geneva";
-  src: url("/fonts/geneva-9-2.otf.woff2") format("woff2");
+  src: url("fonts/geneva-9-2.otf.woff2") format("woff2");
   font-display: swap;
   font-weight: normal normal;
 }
 
 @font-face {
   font-family: "Chicago";
-  src: url("/fonts/chicago-12-1.otf.woff2") format("woff2");
+  src: url("fonts/chicago-12-1.otf.woff2") format("woff2");
   font-display: swap;
   font-weight: normal normal;
 }
