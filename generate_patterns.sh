@@ -8,8 +8,6 @@ set -euo pipefail
 # CONFIGURATION
 # =============================================================================
 
-# Version information
-readonly VERSION="2.0.0"
 SCRIPT_NAME="$(basename "$0")"
 readonly SCRIPT_NAME
 
@@ -780,7 +778,7 @@ EOF
 
 # Version information
 show_version() {
-    echo "$SCRIPT_NAME version $VERSION"
+    echo "$SCRIPT_NAME"
     echo "ImageMagick version: $(magick --version 2>/dev/null | head -n1 | sed 's/Version: //' || echo 'Not found')"
     echo "Running on: $(uname -s) $(uname -r)"
     echo "CPU cores available: $MAX_JOBS"
@@ -940,7 +938,7 @@ run_self_test() {
 main_processing() {
     local output_dir="$1"
 
-    log_info "Starting Mac Desktop Pattern Generation v$VERSION"
+    log_info "Starting Mac Desktop Pattern Generation"
     log_info "Output directory: $output_dir"
     log_info "Parallel jobs: $MAX_JOBS"
     log_info "Formats: ${FORMATS[*]}"
