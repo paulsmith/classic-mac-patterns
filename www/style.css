@@ -38,6 +38,7 @@
   --screen-border: light-dark(#333, #666);
   --canvas-white: white; /* Keep patterns black and white for authenticity */
   --link-color: light-dark(#999, 999);
+  --theme-toggle-background: light-dark(#1a1a1a, #f5f5f5);
 
   /* Pattern background colors for JavaScript consumption */
   --pattern-bg-dark: #e8e8e8;
@@ -122,7 +123,7 @@ header h1 {
 }
 
 .theme-toggle {
-  background: var(--surface-primary);
+  background: var(--theme-toggle-background);
   border: 1px solid var(--border-primary);
   border-radius: 8px;
   padding: 8px;
@@ -138,7 +139,6 @@ header h1 {
 .theme-toggle:hover {
   border-color: var(--border-active);
   color: var(--border-active);
-  background-color: var(--button-secondary);
 }
 
 /* Theme icon visibility controlled by JavaScript classes */
