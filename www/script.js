@@ -295,6 +295,7 @@ class MacPatternShowcase {
         this.patterns[Math.floor(Math.random() * this.patterns.length)];
       this.currentPattern = randomPattern;
       this.setPageBackground(randomPattern);
+      this.renderPatternToCanvas(randomPattern);
     }
   }
 
@@ -491,7 +492,7 @@ class MacPatternShowcase {
         const url = `assets/archives/${format.toLowerCase()}_${res}.zip`;
         link.firstElementChild.href = url;
         link.firstElementChild.textContent = res;
-        row.firstElementChild.appendChild(link);
+        row.querySelector(".resolutions").appendChild(link);
       });
       document.querySelector(".download-grid").appendChild(row);
     });

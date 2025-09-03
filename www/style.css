@@ -109,9 +109,17 @@ header {
   position: relative;
 }
 
-header h1 {
-  margin-bottom: 10px;
-  font-weight: bold;
+header {
+  h1 {
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  p {
+    img {
+      max-width: 100%;
+      object-fit: contain;
+    }
+  }
 }
 
 .theme-toggle {
@@ -188,6 +196,11 @@ footer {
   /* Ensure display section can scroll horizontally on small screens */
   overflow-x: auto;
   min-width: 0;
+}
+
+#patternsControls {
+  display: flex;
+  flex-direction: column;
 }
 
 .patterns-grid {
@@ -310,13 +323,20 @@ footer {
 }
 
 .download-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr;
   align-items: center;
   gap: 12px;
   padding: 12px;
   background-color: var(--surface-secondary);
   border-radius: 6px;
   border: 1px solid var(--border-primary);
+
+  .resolutions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
 }
 
 .format-header {
@@ -437,6 +457,13 @@ footer {
     gap: 30px;
   }
 
+  #patternsControls {
+    flex-direction: row;
+    gap: 10px;
+  }
+  .pattern-info .pattern-preview pre {
+    font-size: 12px;
+  }
   .bezel {
     padding: 30px 20px 40px 20px;
   }
@@ -456,9 +483,22 @@ footer {
     position: static;
   }
 
+  .pattern-info {
+    display: none;
+  }
+
+  .download-row .download-link {
+    min-width: inherit;
+  }
+
+  .patterns-grid {
+    margin-bottom: 10px;
+    padding: 5px;
+  }
+
   .pattern-item {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
   }
 
   .bezel {
