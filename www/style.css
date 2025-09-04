@@ -135,6 +135,10 @@ theme-toggle {
       display: block;
     }
   }
+
+  &:not(:defined) {
+    display: none;
+  }
 }
 
 body[style*="color-scheme: dark"] {
