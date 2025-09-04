@@ -86,13 +86,13 @@ class MacPatternShowcase {
   }
 
   patternTo64Bit(pattern) {
-    let bits = '';
+    let bits = "";
     for (let y = 0; y < 8; y++) {
       for (let x = 0; x < 8; x++) {
         bits += pattern.binaryPattern[y][x].toString();
       }
     }
-    return BigInt('0b' + bits);
+    return BigInt("0b" + bits);
   }
 
   createBackgroundPattern(pattern) {
@@ -332,7 +332,7 @@ class MacPatternShowcase {
 
       const number64bit = this.patternTo64Bit(pattern);
       const decimal = number64bit.toString();
-      const hex = '0x' + number64bit.toString(16).toUpperCase();
+      const hex = "0x" + number64bit.toString(16).toUpperCase();
 
       // Update DOM elements
       patternStatus.innerHTML = `<strong>${status}: Pattern ${displayNumber}</strong>`;

@@ -307,18 +307,23 @@ footer {
 
 .number-representations {
   width: 280px;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 5px 10px;
-  font-size: 20px;
-
-  dt {
-    color: var(--primary-text);
+  p {
+    margin-bottom: 5px;
   }
+  dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 5px 10px;
+    font-size: 20px;
 
-  dd {
-    color: var(--secondary-text);
-    word-break: break-all;
+    dt {
+      color: var(--primary-text);
+    }
+
+    dd {
+      color: var(--secondary-text);
+      word-break: break-all;
+    }
   }
 }
 
