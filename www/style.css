@@ -294,6 +294,34 @@ footer {
   background-color: color-mix(in srgb, var(--border-active) 10%, transparent);
 }
 
+.pattern-data {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.pattern-data pre {
+  flex: 1;
+  margin: 0;
+}
+
+.number-representations {
+  width: 280px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 5px 10px;
+  font-size: 20px;
+
+  dt {
+    color: var(--primary-text);
+  }
+
+  dd {
+    color: var(--secondary-text);
+    word-break: break-all;
+  }
+}
+
 .downloads {
   background-color: var(--surface-primary);
   padding: 20px;

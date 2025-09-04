@@ -85,6 +85,16 @@ class MacPatternShowcase {
     return patterns;
   }
 
+  patternTo64Bit(pattern) {
+    let bits = '';
+    for (let y = 0; y < 8; y++) {
+      for (let x = 0; x < 8; x++) {
+        bits += pattern.binaryPattern[y][x].toString();
+      }
+    }
+    return BigInt('0b' + bits);
+  }
+
   createBackgroundPattern(pattern) {
     const canvasSize = 8;
     const canvas = document.createElement("canvas");
@@ -307,6 +317,8 @@ class MacPatternShowcase {
     const patternPreview = document.getElementById("patternPreview");
     const pbmContent = document.getElementById("pbmContent");
     const copyBtn = document.getElementById("copyPbmBtn");
+    const numberDecimal = document.getElementById("numberDecimal");
+    const numberHex = document.getElementById("numberHex");
 
     if (pattern) {
       const status = isSelected ? "Selected" : "Previewing";
@@ -318,10 +330,16 @@ class MacPatternShowcase {
         .join("\n");
       const pbm = "P1\n8 8\n" + pbmLines;
 
+      const number64bit = this.patternTo64Bit(pattern);
+      const decimal = number64bit.toString();
+      const hex = '0x' + number64bit.toString(16).toUpperCase();
+
       // Update DOM elements
       patternStatus.innerHTML = `<strong>${status}: Pattern ${displayNumber}</strong>`;
       pbmContent.textContent = pbm;
       copyBtn.setAttribute("data-copy", pbm);
+      if (numberDecimal) numberDecimal.textContent = decimal;
+      if (numberHex) numberHex.textContent = hex;
       patternPreview.style.display = "block";
     } else {
       // Clear pattern info
