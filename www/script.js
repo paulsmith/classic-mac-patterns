@@ -14,13 +14,13 @@ class MacPatternShowcase {
     this.desktop = document.getElementById("desktop");
     this.ctx = this.desktop.getContext("2d");
     this.patternInfo = document.getElementById("patternInfo");
-    this.themeToggle = document.getElementById("themeToggle");
+    this.themeToggle = document.querySelector("theme-toggle");
 
     this.init();
   }
 
   async init() {
-    this.initTheme();
+    //this.initTheme();
     await this.loadPatterns();
     this.createPatternGrid();
     this.setupEventListeners();
@@ -55,20 +55,20 @@ class MacPatternShowcase {
       });
   }
 
-  setTheme(theme) {
-    document.body.style.colorScheme = theme;
-    document.body.className = theme === "dark" ? "dark-theme" : "light-theme";
-    localStorage.setItem("color-scheme", theme);
-  }
+  // setTheme(theme) {
+  //   document.body.style.colorScheme = theme;
+  //   document.body.className = theme === "dark" ? "dark-theme" : "light-theme";
+  //   localStorage.setItem("color-scheme", theme);
+  // }
 
   toggleTheme() {
-    const currentTheme =
-      localStorage.getItem("color-scheme") ||
-      (window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light");
-    const newTheme = currentTheme === "dark" ? "light" : "dark";
-    this.setTheme(newTheme);
+    // const currentTheme =
+    //   localStorage.getItem("color-scheme") ||
+    //   (window.matchMedia("(prefers-color-scheme: dark)").matches
+    //     ? "dark"
+    //     : "light");
+    // const newTheme = currentTheme === "dark" ? "light" : "dark";
+    // this.setTheme(newTheme);
 
     // Update the page background pattern with new theme colors
     this.updatePageBackgroundForTheme();
@@ -259,8 +259,24 @@ class MacPatternShowcase {
   }
 
   setupEventListeners() {
-    this.themeToggle.addEventListener("click", () => {
-      this.toggleTheme();
+    this.themeToggle.dispatchEvent(
+      new CustomEvent("theme-toggle:request", {
+        detail: {
+          callback: (theme) => {
+            document.body.className =
+              theme === "dark" ? "dark-theme" : "light-theme";
+            this.updatePageBackgroundForTheme();
+          },
+        },
+      }),
+    );
+
+    this.themeToggle.addEventListener("theme-toggle:toggled", (event) => {
+      const { newTheme } = event.detail;
+      console.log("new theme", newTheme);
+      document.body.className =
+        newTheme === "dark" ? "dark-theme" : "light-theme";
+      this.updatePageBackgroundForTheme();
     });
   }
 
@@ -292,7 +308,8 @@ class MacPatternShowcase {
   initializeWithRandomPattern() {
     if (this.patterns.length > 0) {
       let patnum = Math.floor(Math.random() * this.patterns.length);
-      while (patnum === 0 || patnum === 19) // black or white
+      while (patnum === 0 || patnum === 19)
+        // black or white
         patnum = Math.floor(Math.random() * this.patterns.length);
       const randomPattern = this.patterns[patnum];
       this.currentPattern = randomPattern;

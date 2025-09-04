@@ -17,19 +17,26 @@
       <header>
         <div class="header-top">
           <h1>Classic Mac OS System 1 Patterns</h1>
-          <button
-            id="themeToggle"
-            class="theme-toggle"
-            aria-label="Toggle dark mode"
-          >
-            <img src="pixel-sun.png" class="sun-icon" width="16" height="16" />
-            <img
-              src="pixel-moon.png"
-              class="moon-icon"
-              width="16"
-              height="16"
-            />
-          </button>
+          <theme-toggle>
+            <button
+              id="themeToggle"
+              class="theme-toggle"
+              aria-label="Toggle dark mode"
+            >
+              <img
+                src="pixel-sun.png"
+                class="sun-icon"
+                width="16"
+                height="16"
+              />
+              <img
+                src="pixel-moon.png"
+                class="moon-icon"
+                width="16"
+                height="16"
+              />
+            </button>
+          </theme-toggle>
         </div>
         <p>
           8×8-pixel B&amp;W patterns from Macintosh System 1 Control Panel and
@@ -163,7 +170,7 @@
         </p>
       </footer>
     </div>
-
+    <script src="theme-toggle.js" defer></script>
     <script src="script.js"></script>
   </body>
 </html>
