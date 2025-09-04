@@ -103,6 +103,16 @@ class MacPatternShowcase {
     return canvas.toDataURL();
   }
 
+  getResolvedCssVar(varName) {
+    const helper = document.createElement("div");
+    helper.style.setProperty("display", "none");
+    helper.style.setProperty("color", `var(${varName})`);
+    document.body.appendChild(helper);
+    const resolvedColor = getComputedStyle(helper).color;
+    document.body.removeChild(helper);
+    return resolvedColor;
+  }
+
   createPageBackgroundPattern(pattern) {
     // Create a "fat bits" background pattern - scale 8x8 for chunky pixelation
     const scale = 4;
@@ -112,13 +122,8 @@ class MacPatternShowcase {
     canvas.height = canvasSize;
     const ctx = canvas.getContext("2d");
 
-    const computedStyle = getComputedStyle(document.body);
-    const darkColor = computedStyle
-      .getPropertyValue("--pattern-bg-dark")
-      .trim();
-    const lightColor = computedStyle
-      .getPropertyValue("--pattern-bg-light")
-      .trim();
+    const darkColor = this.getResolvedCssVar("--pattern-bg-dark");
+    const lightColor = this.getResolvedCssVar("--pattern-bg-light");
 
     for (let y = 0; y < 8; y++) {
       for (let x = 0; x < 8; x++) {
@@ -218,8 +223,6 @@ class MacPatternShowcase {
       new CustomEvent("theme-toggle:request", {
         detail: {
           callback: (theme) => {
-            document.body.className =
-              theme === "dark" ? "dark-theme" : "light-theme";
             this.updatePageBackgroundForTheme();
           },
         },
@@ -228,9 +231,6 @@ class MacPatternShowcase {
 
     this.themeToggle.addEventListener("theme-toggle:toggled", (event) => {
       const { newTheme } = event.detail;
-      console.log("new theme", newTheme);
-      document.body.className =
-        newTheme === "dark" ? "dark-theme" : "light-theme";
       this.updatePageBackgroundForTheme();
     });
   }

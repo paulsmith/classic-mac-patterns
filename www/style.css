@@ -39,8 +39,8 @@
   --theme-toggle-background: light-dark(#1a1a1a, #f5f5f5);
 
   /* Pattern background colors for JavaScript consumption */
-  --pattern-bg-dark: #e8e8e8;
-  --pattern-bg-light: #f8f8f8;
+  --pattern-bg-dark: light-dark(#e8e8e8, #2a2a2a);
+  --pattern-bg-light: light-dark(#f8f8f8, #1a1a1a);
 }
 
 a {
@@ -48,18 +48,6 @@ a {
   text-underline-offset: 0.2em;
   text-decoration-thickness: 3px;
   text-decoration-style: dashed;
-}
-
-/* Dark theme overrides for JavaScript variables */
-body.dark-theme {
-  --pattern-bg-dark: #2a2a2a;
-  --pattern-bg-light: #1a1a1a;
-}
-
-/* Light theme overrides */
-body.light-theme {
-  --pattern-bg-dark: #e8e8e8;
-  --pattern-bg-light: #f8f8f8;
 }
 
 * {
