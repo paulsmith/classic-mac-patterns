@@ -20,7 +20,6 @@ class MacPatternShowcase {
   }
 
   async init() {
-    //this.initTheme();
     await this.loadPatterns();
     this.createPatternGrid();
     this.setupEventListeners();
@@ -28,50 +27,6 @@ class MacPatternShowcase {
     this.setupCopyButton();
     this.initializeWithRandomPattern();
     this.createDownloadLinks();
-  }
-
-  initTheme() {
-    // Get saved theme or default to system preference
-    const savedTheme = localStorage.getItem("color-scheme");
-    const systemPrefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
-
-    if (savedTheme) {
-      this.setTheme(savedTheme);
-    } else if (systemPrefersDark) {
-      this.setTheme("dark");
-    } else {
-      this.setTheme("light");
-    }
-
-    // Listen for system theme changes
-    window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", (e) => {
-        if (!localStorage.getItem("color-scheme")) {
-          this.setTheme(e.matches ? "dark" : "light");
-        }
-      });
-  }
-
-  // setTheme(theme) {
-  //   document.body.style.colorScheme = theme;
-  //   document.body.className = theme === "dark" ? "dark-theme" : "light-theme";
-  //   localStorage.setItem("color-scheme", theme);
-  // }
-
-  toggleTheme() {
-    // const currentTheme =
-    //   localStorage.getItem("color-scheme") ||
-    //   (window.matchMedia("(prefers-color-scheme: dark)").matches
-    //     ? "dark"
-    //     : "light");
-    // const newTheme = currentTheme === "dark" ? "light" : "dark";
-    // this.setTheme(newTheme);
-
-    // Update the page background pattern with new theme colors
-    this.updatePageBackgroundForTheme();
   }
 
   async loadPatterns() {

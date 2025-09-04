@@ -5,6 +5,7 @@ class ThemeToggle extends HTMLElement {
       (window.matchMedia("(prefers-color-scheme: dark)").matches
         ? "dark"
         : "light");
+    document.body.style.colorScheme = this.currentTheme;
 
     this.addEventListener("click", (event) => {
       if (event.target.closest("button")) this.toggleTheme();
