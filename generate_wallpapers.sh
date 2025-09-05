@@ -7,7 +7,7 @@ set -euo pipefail
 
 # Configuration
 PATTERN_DIR="patterns"
-OUTPUT_DIR="wallpapers"
+OUTPUT_DIR="www/wallpapers"
 
 # Parallel processing settings
 MAX_JOBS=0  # Always auto-detect
