@@ -196,6 +196,11 @@ footer {
   /* Ensure display section can scroll horizontally on small screens */
   overflow-x: auto;
   min-width: 0;
+
+  p {
+    text-align: center;
+    margin-bottom: 0.5em;
+  }
 }
 
 #patternsControls {
@@ -324,6 +329,336 @@ footer {
       color: var(--secondary-text);
       word-break: break-all;
     }
+  }
+}
+
+/* Display Indicator Styles */
+.screen {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+}
+
+.screen:hover {
+  box-shadow:
+    0 0 0 2px var(--border-hover),
+    0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.display-indicator {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  pointer-events: none;
+}
+
+.download-icon {
+  width: 32px;
+  height: 32px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 2px solid var(--border-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-text);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  opacity: 0.8;
+}
+
+.screen:hover .download-icon {
+  transform: scale(1.1);
+  opacity: 1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.display-indicator.pulse .download-icon {
+  animation: pulseIcon 1s ease-out;
+}
+
+@keyframes pulseIcon {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+
+/* Subtle mobile indicator */
+@media (hover: none) and (pointer: coarse) {
+  .download-icon {
+    opacity: 0.6;
+    width: 28px;
+    height: 28px;
+  }
+
+  .screen:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Modal Dialog Styles */
+.wallpaper-modal {
+  max-width: 90vw;
+  max-height: 85vh;
+  width: 800px;
+  margin: auto;
+  padding: 0;
+  border: 2px solid var(--border-primary);
+  border-radius: 12px;
+  background-color: var(--surface-primary);
+  color: var(--primary-text);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+  }
+
+  &[open] {
+    animation: modalFadeIn 0.2s ease-out;
+  }
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px 16px 24px;
+  border-bottom: 1px solid var(--border-primary);
+  background-color: var(--surface-secondary);
+  border-radius: 10px 10px 0 0;
+
+  h2 {
+    margin: 0;
+    font-family: "Chicago", sans-serif;
+    font-size: 18px;
+    color: var(--primary-text);
+  }
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--secondary-text);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  line-height: 1;
+
+  &:hover {
+    background-color: var(--border-primary);
+    color: var(--primary-text);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.modal-content {
+  padding: 24px;
+  max-height: 60vh;
+  overflow-y: auto;
+
+  p {
+    margin: 0 0 20px 0;
+    color: var(--secondary-text);
+    font-size: 16px;
+    text-align: center;
+  }
+}
+
+.modal-pattern-preview {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.pattern-variant {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-pattern-canvas {
+  border: 2px solid var(--border-primary);
+  border-radius: 8px;
+  background-color: var(--canvas-white);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.pattern-label {
+  font-family: "Geneva", sans-serif;
+  font-size: 14px;
+  color: var(--secondary-text);
+  font-weight: bold;
+}
+
+.wallpaper-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.wallpaper-resolution {
+  background-color: var(--surface-secondary);
+  border-radius: 6px;
+  padding: 15px;
+  border: 1px solid var(--border-primary);
+
+  h4 {
+    margin: 0 0 12px 0;
+    color: var(--primary-text);
+    font-size: 16px;
+    text-align: center;
+    font-family: "Chicago", sans-serif;
+    line-height: 1.2;
+
+    .resolution-text {
+      font-size: 12px;
+      color: var(--secondary-text);
+      font-family: "Geneva", sans-serif;
+      font-weight: normal;
+    }
+  }
+}
+
+.wallpaper-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wallpaper-link-container {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
+  gap: 8px;
+  align-items: center;
+}
+
+.wallpaper-size-label {
+  font-size: 14px;
+  color: var(--primary-text);
+  font-weight: bold;
+  font-family: "Chicago", sans-serif;
+  min-width: 40px;
+  text-align: right;
+}
+
+.wallpaper-link {
+  display: inline-block;
+  padding: 6px 12px;
+  color: var(--primary-text);
+  background-color: var(--surface-primary);
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: normal;
+  text-align: center;
+  border: 1px solid var(--border-primary);
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--button-secondary);
+    border-color: var(--border-hover);
+    color: var(--primary-text);
+  }
+
+  &.regular {
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      var(--border-primary) 2px,
+      var(--border-primary) 3px
+    );
+    background-size: 8px 8px;
+  }
+
+  &.inverted {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 2px,
+      var(--border-primary) 2px,
+      var(--border-primary) 3px
+    );
+    background-size: 8px 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .wallpaper-modal {
+    max-width: 95vw;
+    max-height: 90vh;
+    margin: 20px auto;
+  }
+
+  .modal-header {
+    padding: 16px 20px 12px 20px;
+
+    h2 {
+      font-size: 16px;
+    }
+  }
+
+  .modal-content {
+    padding: 20px;
+    max-height: 70vh;
+  }
+
+  .modal-pattern-preview {
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .modal-pattern-canvas {
+    width: 64px;
+    height: 64px;
+  }
+
+  .pattern-label {
+    font-size: 12px;
+  }
+
+  .wallpaper-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .wallpaper-link-container {
+    grid-template-columns: auto 1fr 1fr;
+    gap: 6px;
+  }
+
+  .wallpaper-link {
+    font-size: 12px;
+    padding: 5px 8px;
   }
 }
 

@@ -137,6 +137,7 @@
 
         <div class="display-section">
           <h2>Display Preview</h2>
+          <p>Tap/click for wallpapers</p>
           <div class="virtual-display">
             <div class="bezel">
               <div class="screen" id="screen">
@@ -147,6 +148,25 @@
                   height="342"
                 >
                 </canvas>
+                <div
+                  class="display-indicator"
+                  id="displayIndicator"
+                  style="display: none"
+                >
+                  <div
+                    class="download-icon"
+                    title="Click to download wallpapers"
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+                    </svg>
+                  </div>
+                </div>
               </div>
               <p>512×342</p>
             </div>
@@ -177,6 +197,43 @@
         </p>
       </footer>
     </div>
+
+    <!-- Wallpaper Download Modal -->
+    <dialog class="wallpaper-modal" id="wallpaperModal">
+      <div class="modal-header">
+        <h2 id="modalPatternTitle">Download Wallpapers</h2>
+        <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close">
+          ×
+        </button>
+      </div>
+      <div class="modal-content">
+        <div class="modal-pattern-preview">
+          <div class="pattern-variant">
+            <canvas
+              class="modal-pattern-canvas pixelated"
+              id="modalPatternRegular"
+              width="80"
+              height="80"
+            ></canvas>
+            <span class="pattern-label">Regular</span>
+          </div>
+          <div class="pattern-variant">
+            <canvas
+              class="modal-pattern-canvas pixelated"
+              id="modalPatternInverted"
+              width="80"
+              height="80"
+            ></canvas>
+            <span class="pattern-label">Inverted</span>
+          </div>
+        </div>
+        <p>Download this pattern as a wallpaper for your device:</p>
+        <div class="wallpaper-grid" id="wallpaperGrid">
+          <!-- Wallpaper links will be populated by JavaScript -->
+        </div>
+      </div>
+    </dialog>
+
     <script src="theme-toggle.js" defer></script>
     <script src="script.js"></script>
   </body>

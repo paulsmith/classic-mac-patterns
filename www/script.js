@@ -25,6 +25,7 @@ class MacPatternShowcase {
     this.setupEventListeners();
     this.setupTooltip();
     this.setupCopyButton();
+    this.setupModal();
     this.initializeWithRandomPattern();
     this.createDownloadLinks();
   }
@@ -146,7 +147,7 @@ class MacPatternShowcase {
     return { dataUrl: canvas.toDataURL(), size: canvasSize };
   }
 
-  renderPatternToCanvas(pattern) {
+  renderPatternToDisplay(pattern) {
     // Create the pattern on an 8x8 off-screen canvas
     const patternCanvas = document.createElement("canvas");
     patternCanvas.width = 8;
@@ -210,7 +211,7 @@ class MacPatternShowcase {
       patternElement.addEventListener("mouseleave", () => {
         if (this.currentPattern) {
           // Return to the selected pattern
-          this.renderPatternToCanvas(this.currentPattern);
+          this.renderPatternToDisplay(this.currentPattern);
           this.updatePatternInfo(this.currentPattern, true);
         } else {
           this.clearPreview();
@@ -256,6 +257,77 @@ class MacPatternShowcase {
     });
   }
 
+  setupModal() {
+    const screen = document.getElementById("screen");
+    const wallpaperModal = document.getElementById("wallpaperModal");
+    const modalCloseBtn = document.getElementById("modalCloseBtn");
+    const modalPatternTitle = document.getElementById("modalPatternTitle");
+
+    // Open modal when screen is clicked (anywhere on the display area)
+    const openModal = (e) => {
+      e.preventDefault();
+      if (this.currentPattern) {
+        const displayNumber = parseInt(
+          this.currentPattern.number,
+          10,
+        ).toString();
+        modalPatternTitle.textContent = `Pattern ${displayNumber} - Download Wallpapers`;
+        this.renderPatternsToModal(this.currentPattern);
+        this.updateWallpaperLinks(this.currentPattern);
+        wallpaperModal.showModal();
+      }
+    };
+
+    // Add click listener to entire screen area
+    screen.addEventListener("click", openModal);
+
+    // Close modal when close button is clicked
+    modalCloseBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      wallpaperModal.close();
+    });
+
+    // Close modal when clicking on backdrop
+    wallpaperModal.addEventListener("click", (e) => {
+      if (e.target === wallpaperModal) {
+        wallpaperModal.close();
+      }
+    });
+
+    // Close modal on Escape key (this is handled natively by dialog, but we can add custom logic if needed)
+    wallpaperModal.addEventListener("close", () => {
+      // Modal is closing - can add any cleanup logic here if needed
+    });
+  }
+
+  renderPatternToCanvas(canvas, pattern, inverted = false) {
+    const ctx = canvas.getContext("2d");
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Scale factor based on canvas size
+    const scale = canvas.width / 8;
+
+    // Draw the pattern scaled up
+    for (let y = 0; y < 8; y++) {
+      for (let x = 0; x < 8; x++) {
+        let bit = pattern.binaryPattern[y][x];
+        if (inverted) bit = 1 - bit; // Invert the bit
+        ctx.fillStyle = bit ? "#000000" : "#ffffff";
+        ctx.fillRect(x * scale, y * scale, scale, scale);
+      }
+    }
+  }
+
+  renderPatternsToModal(pattern) {
+    const regularCanvas = document.getElementById("modalPatternRegular");
+    const invertedCanvas = document.getElementById("modalPatternInverted");
+
+    this.renderPatternToCanvas(regularCanvas, pattern, false);
+    this.renderPatternToCanvas(invertedCanvas, pattern, true);
+  }
+
   setPageBackground(pattern) {
     const { dataUrl, size } = this.createPageBackgroundPattern(pattern);
     document.body.style.backgroundImage = `url(${dataUrl})`;
@@ -279,12 +351,12 @@ class MacPatternShowcase {
       const randomPattern = this.patterns[patnum];
       this.currentPattern = randomPattern;
       this.setPageBackground(randomPattern);
-      this.renderPatternToCanvas(randomPattern);
+      this.renderPatternToDisplay(randomPattern);
     }
   }
 
   previewPattern(pattern) {
-    this.renderPatternToCanvas(pattern);
+    this.renderPatternToDisplay(pattern);
     this.updatePatternInfo(pattern, false);
   }
 
@@ -298,7 +370,7 @@ class MacPatternShowcase {
     element.classList.add("active");
 
     this.currentPattern = pattern;
-    this.renderPatternToCanvas(pattern);
+    this.renderPatternToDisplay(pattern);
     this.updatePatternInfo(pattern, true);
     this.setPageBackground(pattern);
   }
@@ -319,6 +391,7 @@ class MacPatternShowcase {
     const copyBtn = document.getElementById("copyPbmBtn");
     const numberDecimal = document.getElementById("numberDecimal");
     const numberHex = document.getElementById("numberHex");
+    const displayIndicator = document.getElementById("displayIndicator");
 
     if (pattern) {
       const status = isSelected ? "Selected" : "Previewing";
@@ -341,12 +414,92 @@ class MacPatternShowcase {
       if (numberDecimal) numberDecimal.textContent = decimal;
       if (numberHex) numberHex.textContent = hex;
       patternPreview.style.display = "block";
+
+      // Show display indicator for selected patterns only
+      if (isSelected) {
+        this.currentPattern = pattern; // Store for modal use
+        displayIndicator.style.display = "block";
+        // Add subtle entrance animation
+        displayIndicator.classList.add("pulse");
+        setTimeout(() => displayIndicator.classList.remove("pulse"), 1000);
+      } else {
+        displayIndicator.style.display = "none";
+        displayIndicator.classList.remove("pulse");
+      }
     } else {
       // Clear pattern info
       patternStatus.textContent =
         "Click a pattern to preview on the 512×342 display";
       patternPreview.style.display = "none";
+      displayIndicator.style.display = "none";
+      displayIndicator.classList.remove("pulse");
     }
+  }
+
+  updateWallpaperLinks(pattern) {
+    const wallpaperGrid = document.getElementById("wallpaperGrid");
+    const patternNumber = String(pattern.id).padStart(2, "0");
+
+    // Define resolutions with device names and available sizes
+    const resolutions = [
+      { width: 1290, height: 2796, deviceName: "iPhone 15 Pro Max" },
+      { width: 2048, height: 2732, deviceName: "iPad Pro" },
+      { width: 1920, height: 1080, deviceName: "Full HD" },
+      { width: 2560, height: 1440, deviceName: "2K/QHD" },
+      { width: 3840, height: 2160, deviceName: "4K/UHD" },
+    ];
+
+    const pixelSizes = [16, 32, 64];
+
+    // Clear existing content
+    wallpaperGrid.innerHTML = "";
+
+    resolutions.forEach((resolution) => {
+      const resolutionDiv = document.createElement("div");
+      resolutionDiv.className = "wallpaper-resolution";
+
+      const header = document.createElement("h4");
+      header.innerHTML = `${resolution.deviceName}<br><span class="resolution-text">${resolution.width}×${resolution.height}</span>`;
+      resolutionDiv.appendChild(header);
+
+      const linksDiv = document.createElement("div");
+      linksDiv.className = "wallpaper-links";
+
+      pixelSizes.forEach((pixelSize) => {
+        const regularFile = `pattern_${patternNumber}_${resolution.width}x${resolution.height}_${pixelSize}px.png`;
+        const invertedFile = `pattern_${patternNumber}_${resolution.width}x${resolution.height}_${pixelSize}px_inverted.png`;
+
+        // Check if files exist by trying to create links (we'll style them appropriately)
+        const linkContainer = document.createElement("div");
+        linkContainer.className = "wallpaper-link-container";
+
+        const sizeLabel = document.createElement("span");
+        sizeLabel.className = "wallpaper-size-label";
+        sizeLabel.textContent = `${pixelSize}px`;
+        linkContainer.appendChild(sizeLabel);
+
+        const regularLink = document.createElement("a");
+        regularLink.href = `wallpapers/${regularFile}`;
+        regularLink.target = "_blank";
+        regularLink.className = "wallpaper-link regular";
+        regularLink.textContent = "Regular";
+        regularLink.download = regularFile;
+        linkContainer.appendChild(regularLink);
+
+        const invertedLink = document.createElement("a");
+        invertedLink.href = `wallpapers/${invertedFile}`;
+        invertedLink.target = "_blank";
+        invertedLink.className = "wallpaper-link inverted";
+        invertedLink.textContent = "Inverted";
+        invertedLink.download = invertedFile;
+        linkContainer.appendChild(invertedLink);
+
+        linksDiv.appendChild(linkContainer);
+      });
+
+      resolutionDiv.appendChild(linksDiv);
+      wallpaperGrid.appendChild(resolutionDiv);
+    });
   }
 
   setupTooltip() {
