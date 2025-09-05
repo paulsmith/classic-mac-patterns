@@ -1,6 +1,6 @@
 # Classic Mac Patterns
 
-The 38 original 8×8-pixel black and white patterns from Macintosh System 1 Control Panel and MacPaint, extracted from the PAT# resource in the System file.
+The 38 original 8Ã—8-pixel black and white patterns from Macintosh System 1 Control Panel and MacPaint, extracted from the PAT# resource in the System file.
 
 ![all 38 patterns in a 19x2 tile](./www/preview.png)
 
@@ -12,14 +12,14 @@ Visit https://paulsmith.github.io/classic-mac-patterns/ to browse and download p
 
 Patterns are available in multiple formats and resolutions:
 
-- **PBM**: Original NetPBM format (8×8)
-- **PNG, GIF, WebP, AVIF, TIFF, ICO**: 8×8, 16×16, 32×32, 64×64
+- **PBM**: Original NetPBM format (8Ã—8)
+- **PNG, GIF, WebP, AVIF, TIFF, ICO**: 8Ã—8, 16Ã—16, 32Ã—32, 64Ã—64
 - **Archives**: ZIP files by format and resolution
 
 ## Building
 
 Get a System file from a System 1 through 6 disk. (See this [blog
-post](https://pauladamsmith.com/blog/2025/08/classic-mac-patterns.html) for
+post](https://pauladamsmith.com/blog/2025/09/classic-mac-patterns.html) for
 details.) Extract patterns from System file:
 
 ```bash
@@ -35,6 +35,6 @@ Generate web assets:
 
 ## Pattern Data
 
-38 patterns total, numbered 0-37. Each pattern is 8 bytes representing an 8×8 pixel bitmap.
+38 patterns total, numbered 0-37. Each pattern is 8 bytes representing an 8Ã—8 pixel bitmap.
 
 Source: Macintosh System 6 (patterns unchanged since System 1.0, 1984).
